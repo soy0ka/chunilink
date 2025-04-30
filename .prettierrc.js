@@ -4,5 +4,7 @@ module.exports = {
 	useTabs: true,
 	printWidth: 100,
 	singleQuote: true,
-	trailingComma: 'none'
+	trailingComma: 'none',
+  plugins: ['prettier-plugin-tailwindcss'],
+  tailwindStylesheet: "./src/app/global.css",
 }
