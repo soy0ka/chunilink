@@ -1,8 +1,37 @@
+/* ---------- 기본 Tailwind 불러오기 ---------- */
 @import "tailwindcss";
+@import "../style/verse.css";
 
+/* 다크 모드 커스텀 variant 정의 */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ---------- 다크 모드용 CSS 변수 ---------- */
 :root {
-  --background: #ffffff;
+  --background: #F5F5F5;
   --foreground: #171717;
+  --card-bg: rgba(244, 244, 245, 0.8);
+  --card-border: rgba(228, 228, 231, 0.5);
+  --header-bg: rgba(255, 255, 255, 0.8);
+  --section-bg: rgba(244, 244, 245, 0.5);
+  --feature-from: rgba(228, 228, 231, 0.8);
+  --feature-to: rgba(212, 212, 216, 0.8);
+  --mint-light: rgba(179, 248, 226, 0.5);
+  --lavender-light: rgba(197, 194, 248, 0.5);
+  --sky-light: rgba(188, 197, 248, 0.5);
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --card-bg: rgba(23, 23, 23, 0.8);
+  --card-border: rgba(64, 64, 64, 0.5);
+  --header-bg: rgba(0, 0, 0, 0.5);
+  --section-bg: rgba(23, 23, 23, 0.5);
+  --feature-from: rgba(38, 38, 38, 0.8);
+  --feature-to: rgba(23, 23, 23, 0.8);
+  --mint-light: rgba(179, 248, 226, 0.2);
+  --lavender-light: rgba(197, 194, 248, 0.2);
+  --sky-light: rgba(188, 197, 248, 0.2);
 }
 
 @theme inline {
@@ -10,17 +39,120 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --color-chunithm-expert: #F71E1D;
+  
+  /* 새로운 CHUNITHM 컬러 팔레트 */
+  --color-chuni-mint: #B3F8E2;
+  --color-chuni-lavender: #C5C2F8;
+  --color-chuni-green: #30FE8E;
+  --color-chuni-purple: #BF37FF;
+  --color-chuni-violet: #9B63FD;
+  --color-chuni-sky: #BCC5F8;
+  
+  /* Mint */
+  --color-chuni-mint-100: #f0fefa;
+  --color-chuni-mint-200: #e1fdf5;
+  --color-chuni-mint-300: #c7fbec;
+  --color-chuni-mint-400: #b3f8e2;
+  --color-chuni-mint-500: #8af0d3;
+  --color-chuni-mint-600: #61e7c4;
+  --color-chuni-mint-700: #3ddab5;
+  --color-chuni-mint-800: #1cc8a1;
+  --color-chuni-mint-900: #00b58c;
+  
+  /* Lavender */
+  --color-chuni-lavender-100: #f8f7ff;
+  --color-chuni-lavender-200: #f0eefe;
+  --color-chuni-lavender-300: #e2e0fb;
+  --color-chuni-lavender-400: #c5c2f8;
+  --color-chuni-lavender-500: #a7a3f5;
+  --color-chuni-lavender-600: #8984f2;
+  --color-chuni-lavender-700: #6c66ef;
+  --color-chuni-lavender-800: #5048eb;
+  --color-chuni-lavender-900: #372ae7;
+  
+  /* Green */
+  --color-chuni-green-100: #ebfff4;
+  --color-chuni-green-200: #d7ffea;
+  --color-chuni-green-300: #aaffcd;
+  --color-chuni-green-400: #75fea9;
+  --color-chuni-green-500: #30fe8e;
+  --color-chuni-green-600: #06e570;
+  --color-chuni-green-700: #00cc60;
+  --color-chuni-green-800: #00b350;
+  --color-chuni-green-900: #009a40;
+  
+  /* Purple */
+  --color-chuni-purple-100: #fbf2ff;
+  --color-chuni-purple-200: #f5e8ff;
+  --color-chuni-purple-300: #e7c9ff;
+  --color-chuni-purple-400: #d69fff;
+  --color-chuni-purple-500: #bf37ff;
+  --color-chuni-purple-600: #ab00fd;
+  --color-chuni-purple-700: #9600e0;
+  --color-chuni-purple-800: #8200c7;
+  --color-chuni-purple-900: #7000ad;
+  
+  /* Violet */
+  --color-chuni-violet-100: #f7f4ff;
+  --color-chuni-violet-200: #efebff;
+  --color-chuni-violet-300: #ded5ff;
+  --color-chuni-violet-400: #c2b1fe;
+  --color-chuni-violet-500: #9b63fd;
+  --color-chuni-violet-600: #8340fd;
+  --color-chuni-violet-700: #6c1dfc;
+  --color-chuni-violet-800: #5c00f7;
+  --color-chuni-violet-900: #5000d8;
+  
+  /* Sky */
+  --color-chuni-sky-100: #fafbfe;
+  --color-chuni-sky-200: #f4f6fd;
+  --color-chuni-sky-300: #e8ecfb;
+  --color-chuni-sky-400: #bcc5f8;
+  --color-chuni-sky-500: #9eabf5;
+  --color-chuni-sky-600: #7f90f2;
+  --color-chuni-sky-700: #6176ef;
+  --color-chuni-sky-800: #435ceb;
+  --color-chuni-sky-900: #2542e7;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+.common-bg{overflow:visible;}
+
+/* 애니메이션 배경 효과 */
+.chuni-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  background: var(--background);
+  overflow: hidden;
+}
+
+.chuni-bg::before {
+  content: "";
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: -50%;
+  left: -50%;
+  background: radial-gradient(circle, var(--mint-light) 0%, transparent 5%),
+              radial-gradient(circle, var(--lavender-light) 0%, transparent 5%),
+              radial-gradient(circle, var(--sky-light) 0%, transparent 5%);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px, 30px 30px;
+  opacity: 0.1;
+  animation: chuni-bg-scroll 30s linear infinite;
+}
+
+@keyframes chuni-bg-scroll {
+  0% {
+    transform: rotate(0) translateY(0);
+  }
+  100% {
+    transform: rotate(360deg) translateY(10%);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+
