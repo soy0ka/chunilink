@@ -1,0 +1,164 @@
+@layer utilities {
+  /* ── 이미지 helper ─────────────────────────────────────────────── */
+  .bg-bg-mobile          { background-image:url('/images/chunithm/chunithm-base.jpg'); }
+  .bg-bg-desktop         { background-image:url('/images/chunithm/chunithm-base.jpg'); }
+  .bg-frame-top-right    { background-image:url('/images/chunithm/chunithm-topright.png'); }
+  .bg-frame-bottom-left  { background-image:url('/images/chunithm/chunithm-bottomleft.png'); }
+  .bg-globe-cross        { background-image:url('/images/chunithm/chunithm-globecover.png'); }
+  .bg-globe              { background-image:url('/images/chunithm/chunithm-globe.png'); }
+
+  /* 새 팔레트 유틸리티 클래스 */
+  .bg-chuni-gradient-primary { background-image: linear-gradient(to right, var(--color-chuni-mint), var(--color-chuni-green)); }
+  .bg-chuni-gradient-secondary { background-image: linear-gradient(to right, var(--color-chuni-purple), var(--color-chuni-violet)); }
+  .bg-chuni-gradient-accent { background-image: linear-gradient(to right, var(--color-chuni-lavender), var(--color-chuni-sky)); }
+  .text-chuni-gradient-primary { background-image: linear-gradient(to right, var(--color-chuni-mint), var(--color-chuni-green)); background-clip: text; color: transparent; }
+  .text-chuni-gradient-secondary { background-image: linear-gradient(to right, var(--color-chuni-purple), var(--color-chuni-violet)); background-clip: text; color: transparent; }
+  .text-chuni-gradient-accent { background-image: linear-gradient(to right, var(--color-chuni-lavender), var(--color-chuni-sky)); background-clip: text; color: transparent; }
+
+  /* ── 좌상 / 우하 큰 삼각형 (원본의 그라데) ──────────────────────── */
+  .common-bg::before,
+  .common-bg::after {
+    content:"";position:absolute;background-repeat:no-repeat;background-size:contain;z-index:-3;
+  }
+  .common-bg::before{
+    top:0;left:0;width:30vw;height:22vw;
+    background-image:url('/images/chunithm/chunithm-topleft.png');
+    transform-origin:0;
+    animation:topLeft 6s linear infinite;
+  }
+  .common-bg::after{
+    bottom:4%;right:-18%;width:30vw;height:22vw;
+    background-image:url('/images/chunithm/chunithm-bottomright.png');
+    transform-origin:0;
+    transform:translate(0,20%) rotate(-30deg);
+    animation:bottomRight 6s linear infinite;
+  }
+
+  /* ── 상단-우 / 하단-좌 얇은 프레임바 ──────────────────────────── */
+  .frame-tr{
+    @apply absolute top-0 right-0 w-[45vw] h-[9.5vw] bg-no-repeat bg-right-top bg-contain z-[-2];
+    background-image:url('/images/chunithm/chunithm-topright.png');   /* ← 직접 지정 */
+    opacity:1
+  }
+
+  .frame-bl{
+    @apply absolute bottom-0 left-0 w-[50vw] h-[9.75vw] bg-no-repeat bg-left-bottom bg-contain z-[-2];
+    background-image:url('/images/chunithm/chunithm-bottomleft.png'); /* ← 직접 지정 */
+    opacity:1
+  }
+  /* ── 사선 화살 애니메이션 ─────────────────────────────────────── */
+  .arrow-top-right{
+    @apply absolute top-0 right-0 w-[9.5vw] h-[9.75vw]
+           md:w-[5vw] md:h-[5.25vw] bg-contain bg-no-repeat z-[-1];
+    background-image:url('/images/chunithm/chunithm-arrowdown.png');
+    clip-path:polygon(0 0,100% 0,100% 100%,0 82%);
+    animation:arrow 6s ease-in-out infinite;
+    opacity:1;               
+  }
+  .arrow-bottom-left{
+    @apply absolute bottom-0 left-0 w-[15vw] h-[14.5vw]
+           md:w-[5vw] md:h-[5.25vw] bg-contain bg-no-repeat z-[-1];
+    background-image:url('/images/chunithm/chunithm-arrowup.png');
+    clip-path:polygon(0 0,100% 16%,100% 100%,0 100%);
+    animation:arrow 6s ease-in-out infinite reverse;
+    opacity:1;
+  }
+
+  /* ── 회전 입자 (보라/녹색 삼각 조각) ──────────────────────────── */
+  .particle-top-right{
+    @apply absolute top-0 right-0 w-full h-[15vw] md:h-[8.125vw]
+           bg-contain bg-no-repeat z-[-5];
+    background-image:url('/images/chunithm/chunithm-topright.png');
+    animation:particle 6s ease-in-out infinite;
+  }
+  .particle-bottom-left{
+    @apply absolute bottom-0 left-0 w-full h-[15vw] md:h-[8.75vw]
+           bg-contain bg-no-repeat z-[-5];
+    background-image:url('/images/chunithm/chunithm-bottomleft.png');
+    animation:particle 6s ease-in-out infinite;
+  }
+
+  /* ── 세로 “VERSE” 벨트 ────────────────────────────────────────── */
+  .verse{
+    position:absolute;
+    top:0;
+    height:200%;
+    width: 3vw;                          /* 기본 폭, 개별 클래스에서 덮어씀 */
+    background-image:url('/images/chunithm/chunithm-versevert.png');
+    background-repeat:no-repeat repeat;
+    background-size:contain;
+    background-position:top center;
+    z-index:-5;
+    /* outline: blue solid 3vw; */        /* 디버그용 */
+  }
+  .verse.left   { left:4vw; animation:verseBelt 20s linear infinite; }
+  .verse.ctleft { left:25vw; animation:verseBelt 30s linear infinite reverse; }
+  .verse.ctright{ right:25vw; animation:verseBelt 30s linear infinite; }
+  .verse.right  { right:4vw; animation:verseBelt 20s linear infinite reverse; }
+
+  /* ── 코너 흐르는 텍스트 스트립 ────────────────────────────────── */
+
+  .corner-wrap-tr,
+  .corner-wrap-bl{
+    position:absolute;        /* 화면 기준 배치 */
+    width:2200px;             /* PNG 폭보다 살짝 더 길게 */
+    height:6.5vw;             /* 높이 = PNG 비율 */
+    overflow:hidden;          /* 자식이 바깥으로 흘러도 잘라냄 */
+    transform:rotate(8.5deg); /* 프레임 기울기와 동일 */
+    z-index:-1;
+  }
+
+  /* 위치 잡기 (화면 밖 살짝 빼서 자연스럽게) */
+  .corner-wrap-tr{ top:-8vw;  right:-12vw; }   /* 상단 한층 더 위로 */
+  .corner-wrap-bl{ bottom:-10vw; left:-8vw; }  /* 하단 한층 더 아래로 */
+
+  /* ─ 실제 흐르는 PNG ─ */
+  .corner-img-tr,
+  .corner-img-bl{
+    position:absolute; top:0 ; left:0;
+    width:2136px; height:100%;
+    background-repeat:repeat-x;
+    animation:scrollX 60s linear infinite;
+  }
+
+  /* 각각의 이미지 파일 지정 */
+  .corner-img-tr{ background-image:url('/images/chunithm/chunithm-versetext.png'); }
+  .corner-img-bl{ background-image:url('/images/chunithm/chunithm-versetext.png'); }
+
+  /* ── 글로브 util (Tailwind에서 인식되도록) ───────────────────── */
+  .animate-globe { animation:globe 240s linear infinite; }
+  .globe-cross{
+    position:absolute;
+    top:50%; left:50%;
+    width:34vw; height:34vw;
+    transform:translate(-50%,-50%);
+    background:url('/images/chunithm/chunithm-globecover.png') center/contain no-repeat;
+    z-index:-1;                    /* 화살(z:-1)·텍스트(z:-1) 와 같은 층 */
+  }
+  .globe-cross::after{
+    content:"";
+    position:absolute; 
+    top:50%; left:50%;
+    width:29.75vw; height:29.75vw;
+    background:url('/images/chunithm/chunithm-globe.png') center/contain no-repeat;
+    opacity:.9;
+    animation:globe 240s linear infinite;
+  }
+
+  /* ---------- keyframes ---------- */
+  @keyframes globe      { 0%{transform:translate(-50%,-50%) rotate(0deg);} 100%{transform:translate(-50%,-50%) rotate(360deg);} }
+  @keyframes arrow      { 0%,100%{transform:translateY(0);} 50%{transform:translateY(-10%);} }
+  @keyframes particle   { 0%,100%{transform:translateY(0);} 50%{transform:translateY(30%);} }
+  @keyframes verseBelt  { 0%{background-position-y:0%;} 100%{background-position-y:100%;} }
+  @keyframes topLeft    { 0%{opacity:0;transform:translate(-20%,16%) rotate(-10deg);} 14%{opacity:1;} 86%{opacity:1;} 100%{opacity:0;transform:translate(20%,-16%) rotate(0deg);} }
+  @keyframes bottomRight{ 0%{opacity:0;transform:translate(0,20%) rotate(-30deg);} 14%{opacity:1;} 90%{opacity:1;} 100%{opacity:0;transform:translate(-30%,26%) rotate(1deg);} }
+  @media (min-width:768px){
+    .corner-wrap-tr{ top:-6vw; }
+    .corner-wrap-bl{ bottom:-9.5vw; }
+  }
+  /* 수평 스크롤 애니메이션 */
+  @keyframes scrollX{
+    0%   { transform:translateX(0); }
+    100% { transform:translateX(-50%); }   /* PNG 폭의 절반만큼 이동 */
+  }
+}

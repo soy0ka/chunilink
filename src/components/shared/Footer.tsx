@@ -3,7 +3,7 @@ import { FaDiscord, FaGithub } from "react-icons/fa";
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-white dark:bg-black/60 backdrop-blur-lg py-10 border-t border-gray-200 dark:border-white/15 transition-all duration-300">
+    <footer className="w-full bg-white/40 dark:bg-background/80 backdrop-blur-lg py-10 border-t border-gray-200 dark:border-white/15 transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-8">
         <div className="text-center md:text-left">
           <div className="max-w-fit font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-chuni-mint-600 to-chuni-violet-500 mb-3">

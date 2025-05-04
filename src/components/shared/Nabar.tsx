@@ -3,7 +3,7 @@ import ThemeToggle from "./ThemeToggle";
 
 export default function Nabar() {
   return (
-    <header className="w-full p-4 backdrop-blur-md sticky top-0 shadow-md dark:shadow-white/10 z-1">
+    <header className="w-full p-4 backdrop-blur-md sticky top-0 shadow-md dark:shadow-white/10 z-1 bg-white/40 dark:bg-background/70">
       <nav className="max-w-7xl mx-auto flex justify-between items-center">
         <NextLink href="/" className="flex items-center gap-2">
           <div className="font-bold text-2xl bg-clip-text text-transparent bg-gradient-to-r from-chuni-mint-700 to-chuni-violet-500">

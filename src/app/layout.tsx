@@ -1,5 +1,6 @@
 import Footer from "@/components/shared/Footer";
 import Nabar from "@/components/shared/Nabar";
+import VerseBackground from "@/components/shared/VerseBackground";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
@@ -27,10 +28,14 @@ export default function RootLayout({
   return (
     <html lang="ko_KR">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased stick bg-white dark:bg-background`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white dark:bg-background flex flex-col min-h-screen`}
       >
         <Nabar />
-        {children}
+          <VerseBackground>
+            <div className="flex-grow overflow-auto">
+              {children}
+            </div>
+          </VerseBackground>
         <Footer />
       </body>
     </html>
