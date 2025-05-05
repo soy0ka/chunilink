@@ -7,7 +7,7 @@ import { useState } from 'react'
 export default function Bookmarklet() {
 	const [copied, setCopied] = useState(false)
 	const [activeTab, setActiveTab] = useState<'PC' | 'Mobile'>('PC')
-	const bookmarkletCode = `javascript:(function(){var d=document,s=d.createElement('script');s.src='${window.location.origin}/update.js?t='+new Date().getTime();d.body.appendChild(s);})();`
+	const bookmarkletCode = `javascript:(function(){var d=document,s=d.createElement('script');s.src='${window.location.origin}/linker.js?t='+new Date().getTime();d.body.appendChild(s);})();`
 
 	const copyToClipboard = () => {
 		navigator.clipboard.writeText(bookmarkletCode).then(() => {
