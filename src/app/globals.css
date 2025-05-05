@@ -1,6 +1,7 @@
 /* ---------- 기본 Tailwind 불러오기 ---------- */
 @import "tailwindcss";
 @import "../style/verse.css";
+@import "../style/chip.css";
 
 /* 다크 모드 커스텀 variant 정의 */
 @custom-variant dark (&:where(.dark, .dark *));

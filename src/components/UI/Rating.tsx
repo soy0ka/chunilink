@@ -87,7 +87,7 @@ const getColorConfig = (value: number) => {
 			gradient: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%)',
 			shadow: '0 10px 25px -5px rgba(255,105,180,0.3), 0 8px 10px -6px rgba(0,0,0,0.1)',
 			border: 'rgba(255,105,180,0.5)',
-			textColor: 'text-pink-800 dark:text-pink-200'
+			textColor: 'text-pink-800 dark:text-pink-400'
 		}
 	return {
 		color: 'linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff)',
@@ -95,7 +95,7 @@ const getColorConfig = (value: number) => {
 		gradient: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.15) 100%)',
 		shadow: '0 10px 25px -5px rgba(255,255,255,0.4), 0 8px 10px -6px rgba(0,0,0,0.1)',
 		border: 'rgba(255,255,255,0.6)',
-		textColor: 'text-pink-800 dark:text-pink-200'
+		textColor: 'text-pink-800 dark:text-pink-400'
 	}
 }
 
@@ -150,25 +150,6 @@ const RatingBox: React.FC<RatingBoxProps> = ({ rating, animate = false }) => {
 					}}
 				></div>
 			)}
-			<style jsx>{`
-				@keyframes shimmer {
-					0% {
-						background-position: -200px 0;
-					}
-					100% {
-						background-position: 200px 0;
-					}
-				}
-				@keyframes pulse {
-					0%,
-					100% {
-						opacity: 0.4;
-					}
-					50% {
-						opacity: 0.8;
-					}
-				}
-			`}</style>
 		</div>
 	)
 }

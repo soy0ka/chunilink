@@ -1,10 +1,10 @@
 /* eslint-disable */
 'use client'
 
+import Bookmarklet from '@/components/shared/Bookmarklet'
 import Box from '@/components/UI/Box'
 import Button from '@/components/UI/Button'
-import Card from '@/components/UI/Card'
-import { AlertCircle, Check, CheckCircle2, Info } from 'lucide-react'
+import { AlertCircle, Check, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
@@ -522,7 +522,7 @@ export default function UploadPage() {
 						{/* 헤더 */}
 						<div className="text-center">
 							<h1 className="text-2xl font-bold text-gray-800 md:text-3xl dark:text-white">
-								CHUNITHM 성과 업로드
+								CHUNILINKER
 							</h1>
 							<p className="mt-2 text-gray-600 dark:text-gray-300">
 								{hasUploadParam
@@ -547,35 +547,7 @@ export default function UploadPage() {
 						)}
 
 						{/* 북마크렛 안내 - 대기 상태가 아닐 때만 표시 */}
-						{!hasUploadParam && (
-							<>
-								<Card className="p-4 backdrop-blur-md">
-									<div className="flex items-start gap-3">
-										<Info className="mt-0.5 h-5 w-5 flex-shrink-0 text-blue-500" />
-										<div className="text-sm text-gray-700 dark:text-gray-300">
-											<p className="mb-1 font-medium text-gray-900 dark:text-white">
-												북마크렛을 사용하여 데이터 가져오기
-											</p>
-											<p className="mb-2">
-												CHUNITHM Net에서 직접 데이터를 가져오려면 북마크렛을 사용해야 합니다.
-											</p>
-											<ol className="ml-5 list-decimal space-y-1">
-												<li>CHUNITHM Net에 로그인합니다.</li>
-												<li>북마크렛을 실행하여 데이터를 자동으로 가져옵니다.</li>
-											</ol>
-										</div>
-									</div>
-								</Card>
-
-								<div className="mx-auto mt-4 text-center">
-									<Link href="/bookmarklet">
-										<Button primary className="inline-flex items-center gap-2">
-											북마크렛 사용 방법 알아보기
-										</Button>
-									</Link>
-								</div>
-							</>
-						)}
+						{!hasUploadParam && <Bookmarklet />}
 
 						{/* 진행 상태 */}
 						{loading && !waitingForData && (
