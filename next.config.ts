@@ -13,6 +13,16 @@ const nextConfig: NextConfig = {
         hostname: "chunithm-net-eng.com",
         pathname: "/mobile/images/**",
       },
+      {
+        protocol: "https",
+        hostname: "chunithm.sega.jp",
+        pathname: "/storage/chuni-img/**",
+      },
+      {
+        protocol: "https",
+        hostname: "chunithm.sega.jp",
+        pathname: "/storage/chuni-img/music/**",
+      }
     ],
   },
 };
