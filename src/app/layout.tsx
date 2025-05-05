@@ -32,7 +32,7 @@ export default function RootLayout({
       >
         <Nabar />
           <VerseBackground>
-            <div className="flex-grow overflow-auto">
+            <div className="flex-grow overflow-auto z-1">
               {children}
             </div>
           </VerseBackground>

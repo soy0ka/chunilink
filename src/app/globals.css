@@ -39,8 +39,20 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-chunithm-expert: #F71E1D;
-  
+  --color-chunihtm-basic: #009F7B;
+  --color-chunihtm-advanced: #F37901;
+  --color-chunithm-expert: #E92929;
+  --color-chunithm-master: #8C1BE1;
+
+  --color-bronze: linear-gradient(to right, #cd7f32, #b08d57, #cd7f32);
+  --color-silver: linear-gradient(90deg, #79F2FF 0%, #1EC7ED 30%, #93FFFF 60%, #1CF3FA 100%);
+  --color-gold: linear-gradient(to right, #e6b800, #ffd700, #e6b800);
+
+  --color--rating-green: #24F117;
+  --color--rating-orange: #FAB90A;
+  --color--rating-red: #F75166;
+  --color--rating-purple: #EC56E5;
+
   /* 새로운 CHUNITHM 컬러 팔레트 */
   --color-chuni-mint: #B3F8E2;
   --color-chuni-lavender: #C5C2F8;
@@ -117,6 +129,33 @@
 }
 
 .common-bg{overflow:visible;}
+
+.bg-gold {
+  background: var(--color-gold);
+  text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 15px #ffd700;
+}
+
+.text-gold {
+  background: var(--color-gold);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  /* ③ 은은한 빛 번짐 */
+  text-shadow:
+    0 0 4px rgba(255, 215, 0, 0.6),
+    0 0 8px rgba(255, 215, 0, 0.4),
+}
+
+@keyframes shine {
+  0%   { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.text-gold.shimmer {
+  background-size: 200%;
+  animation: shine 3s linear infinite;
+}
 
 /* 애니메이션 배경 효과 */
 .chuni-bg {
