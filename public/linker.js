@@ -167,6 +167,7 @@ async function main() {
 	const urls = {
 		home: `${baseUrl}home/`,
 		music: `${baseUrl}record/musicGenre/`,
+    basic: `${baseUrl}home/playerData/`,
 		ratingsBest: `${baseUrl}home/playerData/ratingDetailBest/`,
 		ratingsNew: `${baseUrl}home/playerData/ratingDetailRecent/`
 	}
@@ -212,6 +213,14 @@ async function main() {
 	await utils.sleep(1000)
 	const playerData = await collectPlayerData(homeDoc)
   updateProgressToLinker(progressCount, fullProgressCount, '플레이어 프로필 수집 완료')
+
+  // 1-2. 추가 플레이어 데이터 수집
+  const PlayerDataDoc = await utils.fetchPageDoc(urls.basic)
+  updateProgressToLinker(progressCount, fullProgressCount, '추가 플레이어 데이터를 가져오는 중...')
+  const additionalPlayerData = await collectAdditionalPlayerData(PlayerDataDoc)
+  playerData.friendCode = additionalPlayerData.friendCode
+  playerData.totalPlayCount = additionalPlayerData.totalPlayCount
+  updateProgressToLinker(progressCount, fullProgressCount, '추가 플레이어 데이터 수집 완료')
 
 	// 2. 악곡 데이터 수집 준비
 	progressCount++
@@ -283,6 +292,24 @@ async function main() {
 	} catch (err) {
 		console.error('데이터 전송 중 오류:', err)
 	}
+
+  /**
+   * 부가적 플레이어 데이터를 수집합니다.
+   * 친구 코드와 총 플레이수를 수집합니다.
+   * @param {Document} PlayerDataDoc - 플레이어 데이터 문서
+   * @returns {Object} 부가적 플레이어 데이터
+   */
+  async function collectAdditionalPlayerData(PlayerDataDoc) {
+    // 친구 코드는 숨겨진 span에 있음
+    const friendCodeSpan = PlayerDataDoc.querySelector('.user_data_friend_tap span[style*="display:none"]')
+    const friendCode = friendCodeSpan ? friendCodeSpan.textContent.trim() : ''
+    const totalPlayCount = PlayerDataDoc.querySelector('.user_data_play_count')?.textContent?.trim() || ''
+    
+    return {
+      friendCode,
+      totalPlayCount
+    }
+  }
 
 	/**
 	 * 플레이어 프로필 데이터를 수집합니다.

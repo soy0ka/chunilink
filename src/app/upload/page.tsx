@@ -7,14 +7,14 @@ import Button from '@/components/UI/Button'
 import { AlertCircle, Check, CheckCircle2 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 
+// Interface definitions
 interface StepStatus {
 	playerInfo: 'pending' | 'processing' | 'complete' | 'error'
 	playData: 'pending' | 'processing' | 'complete' | 'error'
 	songData: 'pending' | 'processing' | 'complete' | 'error'
 	ratingData: 'pending' | 'processing' | 'complete' | 'error'
-	// 난이도별 세부 상태 추가
 	difficulties: {
 		basic: 'pending' | 'processing' | 'complete' | 'error'
 		advanced: 'pending' | 'processing' | 'complete' | 'error'
@@ -24,7 +24,8 @@ interface StepStatus {
 	}
 }
 
-export default function UploadPage() {
+// Inner component that uses search params
+function UploadPageContent() {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const isBookmarklet = searchParams.get('bookmarklet') === 'true'
@@ -41,7 +42,6 @@ export default function UploadPage() {
 		playData: 'pending',
 		songData: 'pending',
 		ratingData: 'pending',
-		// 난이도별 초기 상태 설정
 		difficulties: {
 			basic: 'pending',
 			advanced: 'pending',
@@ -54,7 +54,6 @@ export default function UploadPage() {
 	const [progressMessage, setProgressMessage] = useState<string>('데이터를 기다리는 중...')
 	const [currentStep, setCurrentStep] = useState<number>(0)
 	const [totalSteps, setTotalSteps] = useState<number>(8)
-	// 현재 진행중인 단계를 추적하는 상태 추가
 	const [currentActiveStep, setCurrentActiveStep] = useState<keyof StepStatus | null>(
 		hasUploadParam ? 'playerInfo' : null
 	)
@@ -343,7 +342,7 @@ export default function UploadPage() {
 				if (lowerMessage.includes('신곡')) {
 					// 플레이 데이터가 처리 중이었다면 완료로 표시
 					if (newStatus.playData === 'processing') {
-						if (newStatus.songData !== ('error' as StepStatus['songData'])) {
+						if (newStatus.playData !== ('error' as StepStatus['playData'])) {
 							newStatus.playData = 'complete'
 						}
 					}
@@ -750,5 +749,28 @@ export default function UploadPage() {
 				</div>
 			</div>
 		</React.Fragment>
+	)
+}
+
+// Main component with Suspense boundary
+export default function UploadPage() {
+	return (
+		<Suspense
+			fallback={
+				<div className="dark:bg-background/70 min-h-screen bg-white/30 py-10 backdrop-blur-2xl">
+					<div className="mx-auto max-w-xl px-6 text-center">
+						<h1 className="text-2xl font-bold text-gray-800 md:text-3xl dark:text-white">
+							CHUNILINKER
+						</h1>
+						<p className="mt-2 text-gray-600 dark:text-gray-300">페이지를 불러오는 중...</p>
+						<div className="mt-8 flex justify-center">
+							<div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
+						</div>
+					</div>
+				</div>
+			}
+		>
+			<UploadPageContent />
+		</Suspense>
 	)
 }
