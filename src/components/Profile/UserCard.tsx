@@ -1,3 +1,4 @@
+import { CHUNITHM_INTERNATIONAL_VERSIONS } from '@/app/api/versions/route'
 import Avatar from '@UI/Avatar'
 import FriendCode from '@UI/FriendCode'
 import Honner from '@UI/Honner'
@@ -35,6 +36,31 @@ const UserCard: React.FC<UserCardProps> = ({
 	const maxWon = playCount * 1500
 	const minGukbap = Math.floor(minWon / 8000)
 	const maxGukbap = Math.floor(maxWon / 8000)
+
+	// 현재 버전과 주차 계산
+	const getCurrentVersion = (date: Date) => {
+		// 날짜에 해당하는 버전 찾기
+		const currentVersion = [...CHUNITHM_INTERNATIONAL_VERSIONS]
+			.sort((a, b) => new Date(b.release).getTime() - new Date(a.release).getTime())
+			.find((version) => new Date(version.release).getTime() <= date.getTime())
+
+		if (!currentVersion) return { version: '알 수 없음', week: 0 }
+
+		// 버전 출시일부터 주차 계산
+		const releaseDate = new Date(currentVersion.release)
+		const timeDiff = date.getTime() - releaseDate.getTime()
+		const daysDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
+		const weekNumber = Math.floor(daysDiff / 7) + 1 // 출시 첫 주를 1주차로 계산
+
+		return {
+			version: currentVersion.version,
+			week: weekNumber
+		}
+	}
+
+	const { version, week } = getCurrentVersion(lastPlayDate)
+	// 버전 약칭 (예: CHUNITHM VERSE → VERSE)
+	const shortVersion = version.includes('CHUNITHM') ? version.split('CHUNITHM ')[1] : version
 
 	return (
 		<div className="flex flex-col items-center justify-between gap-6 rounded-2xl border border-white/40 px-8 py-8 shadow-xl backdrop-blur-2xl md:flex-row md:items-end dark:border-white/10">
@@ -86,7 +112,7 @@ const UserCard: React.FC<UserCardProps> = ({
 						})}
 					</span>
 					<span className="font-mono font-medium text-gray-400 dark:text-gray-100">
-						· VERSE 3주차
+						· {shortVersion} {week}주차
 					</span>
 				</div>
 			</div>
