@@ -1,22 +1,75 @@
-@keyframes shimmer {
-  0% {
-    background-position: -200px 0;
-  }
-  100% {
-    background-position: 200px 0;
-  }
-}
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 0.4;
-  }
-  50% {
-    opacity: 0.8;
-  }
+/* Rainbow text effects */
+.rainbow-text {
+  background: linear-gradient(
+    180deg, 
+    #FF877A, #FEBA75, #FEF25D, #88FF1B, #34FFA8, #33F1F8
+  );
+  background-size: 100% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-@keyframes rainbowShift {
-  0%   { background-position:   0% }
-  100% { background-position: 200% }
+.rainbow-extreme-text {
+  background: linear-gradient(
+    180deg, 
+    #F6EF85,
+    #FE848D,
+    #FF48C2,
+    #6D46E2,
+    #4870FC,
+    #06E1F0,
+    #01EABA
+  );
+  background-size: 100% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Rainbow border effects */
+.rainbow-border {
+  background: linear-gradient(
+    180deg, 
+    #FF877A, #FEBA75, #FEF25D, #88FF1B, #34FFA8, #33F1F8
+  );
+  background-size: 100% auto;
+}
+
+.rainbow-border::after {
+  content: '';
+  position: absolute;
+  top: 3;
+  left: 3;
+  right: 3;
+  bottom: 3;
+  background: black;
+  opacity: 0.5;
+  border-radius: 0.75rem;
+}
+
+.rainbow-border-extreme {
+  background: linear-gradient(
+    180deg, 
+    #F6EF85,
+    #FE848D,
+    #FF48C2,
+    #6D46E2,
+    #4870FC,
+    #06E1F0,
+    #01EABA
+  );
+  background-size: 100% auto;
+}
+
+.rainbow-border-extreme::after {
+  content: '';
+  position: absolute;
+  top: 3;
+  left: 3;
+  right: 3;
+  bottom: 3;
+  background: black;
+  opacity: 0.5;
+  border-radius: 0.75rem;
 }
