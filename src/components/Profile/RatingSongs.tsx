@@ -9,6 +9,7 @@ import {
 	Sparkles,
 	Star,
 	Trophy,
+	X,
 	Zap
 } from 'lucide-react'
 import Image from 'next/image'
@@ -70,16 +71,22 @@ const difficultyMap: Record<Difficulty, { abbr: string; color: string }> = {
 }
 
 const getRatingTextColor = (value: number) => {
-	if (value < 4) return 'text-green-800 dark:text-green-200'
-	if (value < 7) return 'text-amber-800 dark:text-amber-200'
-	if (value < 10) return 'text-red-800 dark:text-red-200'
-	if (value < 12) return 'text-purple-800 dark:text-purple-200'
-	if (value < 13.25) return 'text-amber-800 dark:text-amber-200'
-	if (value < 14.5) return 'text-gray-800 dark:text-gray-200'
-	if (value < 15.25) return 'text-amber-800 dark:text-amber-200'
-	if (value < 16) return 'text-amber-700 dark:text-amber-700'
-	if (value < 17) return 'text-zinc-700 dark:text-zinc-200'
-	return 'text-pink-800 dark:text-pink-300'
+	if (value < 4) return 'bg-clip-text text-transparent bg-gradient-to-r from-green-600 to-green-400' // 그린
+	if (value < 7) return 'bg-clip-text text-transparent bg-gradient-to-r from-amber-600 to-amber-400' // 오렌지
+	if (value < 10) return 'bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-red-400' // 레드
+	if (value < 12)
+		return 'bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-purple-400' // 퍼플
+	if (value < 13.25)
+		return 'bg-clip-text text-transparent bg-gradient-to-r from-amber-700 to-amber-500' // 브론즈
+	if (value < 14.5)
+		return 'bg-clip-text text-transparent bg-gradient-to-r from-gray-600 to-gray-400' // 실버
+	if (value < 15.25)
+		return 'bg-clip-text text-transparent bg-gradient-to-r from-yellow-500 to-amber-300' // 골드
+	if (value < 16)
+		return 'bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-yellow-100' // 백금
+	if (value < 17)
+		return 'bg-clip-text text-transparent bg-linear-to-r/longer from-pink-600 to-purple-500'
+	return 'bg-clip-text text-transparent bg-gradient-to-r from-zinc-700 to-zinc-500'
 }
 
 const getClearTypeStyle = (clearType: string) => {
@@ -91,6 +98,8 @@ const getClearTypeStyle = (clearType: string) => {
 			return 'bg-vivid-rainbow text-gray-700'
 		case 'CATASTROPHY':
 			return 'bg-rainbow text-gray-700'
+		case 'FAIL':
+			return 'bg-gradient-to-r from-red-500 to-red-400 dark:from-red-600 dark:to-red-500 text-white'
 		default:
 			return 'bg-gradient-to-r from-green-500 to-emerald-400 dark:from-green-600 dark:to-emerald-500' // 기본
 	}
@@ -150,6 +159,8 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ type, label, className }) => 
 				return <Trophy className="h-3 w-3" />
 			case 'CATASTROPHY':
 				return <Shield className="h-3 w-3" />
+			case 'FAIL':
+				return <X className="h-3 w-3" />
 			default:
 				return <Check className="h-3 w-3" />
 		}
@@ -276,7 +287,7 @@ const SongCard = ({ song, index }: { song: PlayerScoreWithSong; index: number })
 				<div
 					className={`font-mono text-sm font-bold ${getRatingTextColor(song.rating ? (typeof song.rating === 'object' && 'toNumber' in song.rating ? song.rating.toNumber() : Number(song.rating)) : 0)}`}
 				>
-					{String(song.rating)}
+					{parseFloat(String(song.rating)).toFixed(2)}
 				</div>
 			</div>
 			<hr className="mx-2 my-1 border-t border-gray-200 dark:border-gray-700" />

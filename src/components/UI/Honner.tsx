@@ -21,7 +21,8 @@ const Honner: React.FC<HonnerProps> = ({ children, type = 'GOLD', src }) => (
 			backgroundImage: `url('${src || HonnerBackground[type]}')`,
 			textShadow: '0 1px 8px #fff8',
 			backgroundSize: 'cover',
-			backgroundPosition: 'center'
+			backgroundPosition: 'center',
+			maxWidth: '100%'
 		}}
 	>
 		{children}

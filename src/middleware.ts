@@ -2,7 +2,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 // 로그인이 필요한 경로 목록
-const protectedPaths = ["/upload", "/profile"];
+const protectedPaths = ["/upload/", "/profile/@me"];
 
 // 로그인한 사용자가 접근하면 리디렉션할 경로 목록 (로그인 페이지 등)
 const authRoutes = ["/login"];
@@ -41,7 +41,7 @@ export async function middleware(req: NextRequest) {
 export const config = {
   matcher: [
     "/upload/:path*",
-    "/profile/:path*",
+    "/profile/@me",
     "/login",
   ],
 };
