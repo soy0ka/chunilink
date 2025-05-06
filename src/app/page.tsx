@@ -1,6 +1,5 @@
 import Box from '@/components/UI/Box'
 import Button from '@/components/UI/Button'
-import Card from '@/components/UI/Card'
 import { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -27,20 +26,17 @@ export default function Home() {
 					<Box className="flex w-full flex-col items-center py-20 text-center">
 						<div className="absolute inset-0 -z-10 rounded-2xl bg-gradient-to-r from-indigo-300/20 to-purple-300/20 dark:from-indigo-600/20 dark:to-purple-600/20"></div>
 						<h1 className="from-chuni-mint-600 via-chuni-violet-600 mb-6 bg-gradient-to-r to-pink-600 bg-clip-text text-4xl font-bold text-transparent md:text-6xl">
-							오늘의 츄니즘 성과를 자랑해봐요!
+							당신의 츄니즘 성과를 기록하고 공유하세요
 						</h1>
 						<div className="my-4 flex flex-col justify-center gap-4 sm:flex-row">
 							<Link href="/upload">
 								<Button primary>성과 업로드하기</Button>
 							</Link>
-							<Link href="/scores">
-								<Button>스코어보드 보기</Button>
-							</Link>
 						</div>
 					</Box>
 
 					{/* 특징 섹션 */}
-					<section className="py-10">
+					{/* <section className="py-10">
 						<h2 className="mb-12 text-center text-3xl font-bold text-indigo-600 dark:text-indigo-300">
 							다양한 기능
 						</h2>
@@ -120,7 +116,7 @@ export default function Home() {
 								</p>
 							</Card>
 						</div>
-					</section>
+					</section> */}
 
 					{/* 최근 기록 섹션 */}
 					<section className="py-10">
@@ -182,9 +178,9 @@ export default function Home() {
 							여러분의 리듬게임 여정을 기록하고 다른 플레이어들과 함께 성장하세요. 지금 계정을
 							만들고 첫 성과를 업로드해보세요!
 						</p>
-						<Link href="/register">
+						<Link href="/upload">
 							<Button primary className="dark:bg-white/20">
-								무료로 가입하기
+								시작하기
 							</Button>
 						</Link>
 					</Box>

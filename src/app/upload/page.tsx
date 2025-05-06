@@ -5,6 +5,7 @@ import Bookmarklet from '@/components/shared/Bookmarklet'
 import Box from '@/components/UI/Box'
 import Button from '@/components/UI/Button'
 import { AlertCircle, Check, CheckCircle2 } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import React, { Suspense, useEffect, useState } from 'react'
@@ -26,11 +27,31 @@ interface StepStatus {
 
 // Inner component that uses search params
 function UploadPageContent() {
+	const { data: session, status } = useSession()
 	const router = useRouter()
 	const searchParams = useSearchParams()
 	const isBookmarklet = searchParams.get('bookmarklet') === 'true'
 	const isPostUpload = searchParams.get('post') === 'true'
 	const hasUploadParam = isBookmarklet || isPostUpload
+
+	// 로그인 상태 확인
+	useEffect(() => {
+		if (status === 'unauthenticated') {
+			router.push('/login')
+		}
+	}, [status, router])
+
+	// 로딩 중이거나 인증되지 않은 경우 로딩 UI 표시
+	if (status === 'loading' || status === 'unauthenticated') {
+		return (
+			<div className="flex min-h-screen items-center justify-center">
+				<div className="text-center">
+					<div className="mx-auto h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent"></div>
+					<p className="mt-4 text-gray-600 dark:text-gray-300">로딩 중...</p>
+				</div>
+			</div>
+		)
+	}
 
 	const [fileContent, setFileContent] = useState<string | null>(null)
 	const [error, setError] = useState<string | null>(null)

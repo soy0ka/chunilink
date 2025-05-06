@@ -2,12 +2,19 @@
 
 import Box from '@/components/UI/Box'
 import { Check, ClipboardCopy, ExternalLink, Info, Monitor, Smartphone } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Bookmarklet() {
 	const [copied, setCopied] = useState(false)
 	const [activeTab, setActiveTab] = useState<'PC' | 'Mobile'>('PC')
-	const bookmarkletCode = `javascript:(function(){var d=document,s=d.createElement('script');s.src='${window.location.origin}/linker.js?t='+new Date().getTime();d.body.appendChild(s);})();`
+	const [bookmarkletCode, setBookmarkletCode] = useState('')
+
+	// 컴포넌트가 마운트된 후에만 window 객체 접근
+	useEffect(() => {
+		setBookmarkletCode(
+			`javascript:(function(){var d=document,s=d.createElement('script');s.src='${window.location.origin}/linker.js?t='+new Date().getTime();d.body.appendChild(s);})();`
+		)
+	}, [])
 
 	const copyToClipboard = () => {
 		navigator.clipboard.writeText(bookmarkletCode).then(() => {
