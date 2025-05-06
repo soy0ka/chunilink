@@ -1,6 +1,18 @@
 import { Prisma, RatingType } from '@prisma/client'
+import {
+	Award,
+	Check,
+	CheckCircle2,
+	Link,
+	Medal,
+	Shield,
+	Sparkles,
+	Star,
+	Trophy,
+	Zap
+} from 'lucide-react'
 import Image from 'next/image'
-import React from 'react'
+import React, { JSX } from 'react'
 
 // Prisma 모델에 맞게 타입 정의
 type PlayerScoreWithSong = Prisma.PlayerScoreGetPayload<{
@@ -18,12 +30,13 @@ type PlayerScoreWithSong = Prisma.PlayerScoreGetPayload<{
 	}
 }>
 
-interface RatingSongsProps {
-	songs: PlayerScoreWithSong[]
-}
-
 // 난이도 타입 정의
 type Difficulty = 'BASIC' | 'ADVANCED' | 'EXPERT' | 'MASTER' | 'ULTIMA' | 'WORLD_END'
+
+// RatingSongs 컴포넌트의 props 타입 정의
+type RatingSongsProps = {
+	songs: PlayerScoreWithSong[]
+}
 
 const difficultyMap: Record<Difficulty, { abbr: string; color: string }> = {
 	BASIC: {
@@ -64,6 +77,127 @@ const getRatingTextColor = (value: number) => {
 	if (value < 17) return 'text-zinc-700 dark:text-zinc-200'
 	return 'text-pink-800 dark:text-pink-300'
 }
+
+const getClearTypeStyle = (clearType: string) => {
+	switch (clearType) {
+		case 'HARD':
+		case 'BRAVE':
+			return 'bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400 text-yellow-900'
+		case 'ABSOLUTE':
+			return 'bg-vivid-rainbow text-gray-700'
+		case 'CATASTROPHY':
+			return 'bg-rainbow text-gray-700'
+		default:
+			return 'bg-gradient-to-r from-green-500 to-emerald-400 dark:from-green-600 dark:to-emerald-500' // 기본
+	}
+}
+
+const getComboTypeStyle = (comboType: string) => {
+	switch (comboType) {
+		case 'ALL_JUSTICE':
+			return 'bg-vivid-rainbow text-gray-700'
+		case 'ALL_JUSTICE_CRITICAL':
+			return 'bg-rainbow text-gray-700'
+		case 'FULL_COMBO':
+			return 'bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400 text-yellow-900'
+		default:
+			return 'bg-gradient-to-r from-blue-500 to-indigo-400 dark:from-blue-600 dark:to-indigo-500'
+	}
+}
+
+const getChainTypeStyle = (chainType: string) => {
+	switch (chainType) {
+		case 'FULL_CHAIN':
+			return 'bg-gradient-to-r from-yellow-300 via-yellow-400 to-orange-400 text-yellow-900'
+		case 'FULL_CHAIN_PLUS':
+			return 'bg-vivid-rainbow text-gray-700'
+		default:
+			return 'bg-gradient-to-r from-purple-500 to-pink-400 dark:from-purple-600 dark:to-pink-500'
+	}
+}
+
+// 스태이터스 배지 컴포넌트
+type StatusBadgeType = 'clear' | 'combo' | 'chain'
+type StatusBadgeProps = {
+	type: StatusBadgeType
+	label: string
+	className?: string
+}
+
+const StatusBadge: React.FC<StatusBadgeProps> = ({ type, label, className }) => {
+	// 타입별 스타일 선택 로직
+	let styleClass = ''
+
+	if (type === 'clear') {
+		styleClass = getClearTypeStyle(label)
+	} else if (type === 'combo') {
+		styleClass = getComboTypeStyle(label)
+	} else if (type === 'chain') {
+		styleClass = getChainTypeStyle(label)
+	}
+
+	// 라벨에 따라 다른 아이콘 선택
+	const getClearIcon = (clearType: string) => {
+		switch (clearType) {
+			case 'HARD':
+			case 'BRAVE':
+				return <Medal className="h-3 w-3" />
+			case 'ABSOLUTE':
+				return <Trophy className="h-3 w-3" />
+			case 'CATASTROPHY':
+				return <Shield className="h-3 w-3" />
+			default:
+				return <Check className="h-3 w-3" />
+		}
+	}
+
+	const getComboIcon = (comboType: string) => {
+		switch (comboType) {
+			case 'ALL_JUSTICE':
+				return <Award className="h-3 w-3" />
+			case 'ALL_JUSTICE_CRITICAL':
+				return <Sparkles className="h-3 w-3" />
+			case 'FULL_COMBO':
+				return <Star className="h-3 w-3" />
+			default:
+				return <CheckCircle2 className="h-3 w-3" />
+		}
+	}
+
+	const getChainIcon = (chainType: string) => {
+		switch (chainType) {
+			case 'FULL_CHAIN':
+				return <Link className="h-3 w-3" />
+			case 'FULL_CHAIN_PLUS':
+				return <Zap className="h-3 w-3" />
+			default:
+				return <Link className="h-3 w-3" />
+		}
+	}
+
+	let icon: JSX.Element
+
+	if (type === 'clear') {
+		icon = getClearIcon(label)
+	} else if (type === 'combo') {
+		icon = getComboIcon(label)
+	} else {
+		icon = getChainIcon(label)
+	}
+
+	return (
+		<div
+			className={`${styleClass} ${className} group relative flex items-center gap-1 overflow-hidden rounded px-2 py-1 text-xs font-bold shadow-sm transition-all duration-300 hover:shadow-md`}
+		>
+			<span className="relative z-10 flex items-center gap-1">
+				{icon}
+				{label.replace('ALL_JUSTICE_CRITICAL', 'AJC').replace('_PLUS', ' +').replaceAll('_', ' ')}
+			</span>
+			<div className="absolute inset-0 bg-white/20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+		</div>
+	)
+}
+
 // 노래 카드 컴포넌트
 const SongCard = ({ song, index }: { song: PlayerScoreWithSong; index: number }) => {
 	const diffInfo =
@@ -75,8 +209,8 @@ const SongCard = ({ song, index }: { song: PlayerScoreWithSong; index: number })
 	// 플레이랭크 표시 및 색상 설정
 	const displayPlayRank = song.playRank?.replace('_PLUS', '+') || ''
 	const getPlayRankColor = (rank: string): string => {
-		if (rank.includes('SSS'))
-			return 'bg-gradient-to-r from-pink-400 via-yellow-300 to-blue-400 text-white'
+		if (rank === 'SSS_PLUS') return 'bg-rainbow text-black' // 레인보우
+		if (rank === 'SSS') return 'bg-vivid-rainbow text-black' // 플래티넘 레인보우
 		if (rank.includes('SS'))
 			return 'bg-gradient-to-r from-yellow-100 via-yellow-200 to-white text-yellow-900' // 백금 그라데이션
 		if (rank.includes('S'))
@@ -89,15 +223,11 @@ const SongCard = ({ song, index }: { song: PlayerScoreWithSong; index: number })
 	}
 
 	return (
-		<div
-			className={`flex transform flex-col overflow-hidden rounded-lg border border-white/40 backdrop-blur-md transition-transform hover:-translate-y-1 dark:border-white/10 dark:shadow-white`}
-		>
+		<div className="flex transform flex-col overflow-hidden rounded-lg border border-white/40 bg-white/5 backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg dark:border-white/10 dark:bg-black/5 dark:shadow-white/5">
 			{/* 커버 이미지 */}
 			<div className="relative w-full pt-[100%]">
 				<Image
-					src={`
-          https://chunithm-net-eng.com/mobile/img/${song.song.imageUrl}
-          `}
+					src={`https://chunithm-net-eng.com/mobile/img/${song.song.imageUrl}`}
 					alt={song.song.title}
 					fill
 					className="object-cover"
@@ -113,7 +243,7 @@ const SongCard = ({ song, index }: { song: PlayerScoreWithSong; index: number })
 				</div>
 
 				<div
-					className={`absolute right-2 top-2 rounded ${getPlayRankColor(song.playRank)} px-1.5 py-0.5 text-xs font-bold`}
+					className={`inner absolute right-2 top-2 rounded ${getPlayRankColor(song.playRank)} inner px-1.5 py-0.5 text-xs font-bold shadow-md`}
 				>
 					{displayPlayRank}
 				</div>
@@ -135,8 +265,8 @@ const SongCard = ({ song, index }: { song: PlayerScoreWithSong; index: number })
 				</p>
 			</div>
 
-			{/* 점수 및 레이팅 */}
-			<div className="mt-auto flex items-end justify-between p-2 pt-0">
+			{/* 점수 및 레이팅 - 고정된 위치 */}
+			<div className="flex items-end justify-between p-2 pt-0">
 				<div className="flex flex-col items-start">
 					<div className="font-mono text-xs text-gray-700 dark:text-gray-300">
 						{song.score.toLocaleString()}
@@ -149,33 +279,17 @@ const SongCard = ({ song, index }: { song: PlayerScoreWithSong; index: number })
 				</div>
 			</div>
 			<hr className="mx-2 my-1 border-t border-gray-200 dark:border-gray-700" />
-			<div className="mt-1 flex gap-1">
-				{/* Clear Type */}
-				{song.clearType && (
-					<span
-						className="rounded bg-green-100 px-1.5 py-0.5 text-[10px] font-semibold text-green-700 dark:bg-green-900/60 dark:text-green-200"
-						title="Clear Type"
-					>
-						{song.clearType.replace('_', ' ')}
-					</span>
+
+			{/* 향상된 상태 배지 섹션 - 높이 고정 */}
+			<div className="mb-1 h-24 flex-1 p-2 pt-1">
+				{song.clearType && song.clearType !== 'CLEAR' && (
+					<StatusBadge type="clear" label={song.clearType} className="mt-2 flex-grow" />
 				)}
-				{/* Combo Type */}
 				{song.comboType && (
-					<span
-						className="rounded bg-blue-100 px-1.5 py-0.5 text-[10px] font-semibold text-blue-700 dark:bg-blue-900/60 dark:text-blue-200"
-						title="Combo Type"
-					>
-						{song.comboType.replace('_', ' ')}
-					</span>
+					<StatusBadge type="combo" label={song.comboType} className="mt-2 flex-grow" />
 				)}
-				{/* Chain Type */}
 				{song.cToCType && (
-					<span
-						className="rounded bg-purple-100 px-1.5 py-0.5 text-[10px] font-semibold text-purple-700 dark:bg-purple-900/60 dark:text-purple-200"
-						title="Chain Type"
-					>
-						{song.cToCType.replace('_', ' ')}
-					</span>
+					<StatusBadge type="chain" label={song.cToCType} className="mt-2 flex-grow" />
 				)}
 			</div>
 		</div>

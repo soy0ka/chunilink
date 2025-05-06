@@ -1,0 +1,231 @@
+import { Menu } from '@/components/Profile/Menubar'
+import RatingSongs from '@/components/Profile/RatingSongs'
+import UserCard from '@/components/Profile/UserCard'
+import { getServerAuthSession } from '@/library/auth'
+import { prisma } from '@/library/prismaSingleton'
+import { Prisma, RatingType } from '@prisma/client'
+import { notFound } from 'next/navigation'
+
+// PlayerScore 타입 정의
+type PlayerScoreWithSong = Prisma.PlayerScoreGetPayload<{
+	include: {
+		song: {
+			select: {
+				id: true
+				title: true
+				artist: true
+				imageUrl: true
+				level: true
+				difficulties: true
+			}
+		}
+	}
+}>
+
+// 플레이어 데이터 타입 정의
+type PlayerWithRelations = Prisma.PlayerGetPayload<{
+	include: {
+		User: {
+			select: {
+				name: true
+				image: true
+			}
+		}
+		PlayerScore: true
+		PlayerCharacter: {
+			include: {
+				character: true
+			}
+		}
+		PlayerHonor: {
+			include: {
+				honor: true
+			}
+		}
+	}
+}> & {
+	PlayerScore: PlayerScoreWithSong[]
+}
+
+// 메타데이터 동적 생성
+export async function generateMetadata({ params }: { params: { id: string } }) {
+	// params를 비동기적으로 처리
+	const id = params.id
+	const player = await getPlayerData(id)
+
+	if (!player) {
+		return {
+			title: '사용자를 찾을 수 없습니다 | CHUNILINK'
+		}
+	}
+
+	return {
+		title: `${player.name || 'Unknown'} (${player.rating}) | CHUNILINK`,
+		description: `${player.name || 'Unknown'}님의 츄니즘 프로필입니다.`
+	}
+}
+
+// 서버에서 플레이어 데이터 가져오기
+async function getPlayerData(id: string): Promise<PlayerWithRelations | null> {
+	const session = await getServerAuthSession()
+	try {
+		// '@me'인 경우 현재 사용자의 플레이어 정보 조회
+		if (id === '@me') {
+			if (!session?.user?.id) {
+				return null
+			}
+
+			const player = await prisma.player.findFirst({
+				where: {
+					userId: session.user.id
+				},
+				include: {
+					User: {
+						select: {
+							name: true,
+							image: true
+						}
+					},
+					PlayerScore: {
+						orderBy: {
+							rating: 'desc'
+						},
+						where: {
+							OR: [{ ratingType: RatingType.NEW }, { ratingType: RatingType.OLD }]
+						},
+						include: {
+							song: {
+								select: {
+									id: true,
+									title: true,
+									artist: true,
+									imageUrl: true,
+									difficulties: true
+								}
+							}
+						}
+					},
+					PlayerCharacter: {
+						include: {
+							character: true
+						}
+					},
+					PlayerHonor: {
+						include: {
+							honor: true
+						},
+						orderBy: {
+							displayOrder: 'asc'
+						}
+					}
+				}
+			})
+			return player
+		}
+
+		// 일반적인 경우: slug로 플레이어 찾기
+		const player = await prisma.player.findUnique({
+			where: {
+				slug: id
+			},
+			include: {
+				User: {
+					select: {
+						name: true,
+						image: true
+					}
+				},
+				PlayerScore: {
+					orderBy: {
+						rating: 'desc'
+					},
+					where: {
+						OR: [{ ratingType: RatingType.NEW }, { ratingType: RatingType.OLD }]
+					},
+					include: {
+						song: {
+							include: {
+								difficulties: true
+							}
+						}
+					}
+				},
+				PlayerCharacter: {
+					include: {
+						character: true
+					}
+				},
+				PlayerHonor: {
+					include: {
+						honor: true
+					},
+					orderBy: {
+						displayOrder: 'asc'
+					}
+				}
+			}
+		})
+
+		return player
+	} catch (error) {
+		console.error('Failed to fetch player data:', error)
+		return null
+	}
+}
+
+export default async function ProfilePage({ params }: { params: { id: string } }) {
+	// params를 비동기적으로 처리
+	const id = params.id
+	const player = await getPlayerData(id)
+
+	if (!player) notFound()
+
+	// 최근 플레이 날짜 - player.lastPlayed 또는 lastUpdated를 사용
+	const lastPlayDate = player.lastPlayed || player.lastUpdated || new Date()
+
+	// 캐릭터 정보 가져오기
+	const favoriteCharacter = player.PlayerCharacter.find((pc) => pc.isFavorite)
+	const avatarUrl =
+		`https://chunithm-net-eng.com/mobile/img/${favoriteCharacter?.character.imageUrl}` ||
+		'/default-avatar.png'
+
+	// 플레이어 칭호 가져오기
+	const allowedHonorTypes = ['GOLD', 'SILVER', 'PLATINA', 'RAINBOW', 'NORMAL'] as const
+	type AllowedHonorType = (typeof allowedHonorTypes)[number]
+
+	const honners = player.PlayerHonor.map((honor) => ({
+		type: honor.honor.class as string,
+		label: honor.honor.name
+	})).filter((honor) => allowedHonorTypes.includes(honor.type as AllowedHonorType)) as {
+		type: AllowedHonorType
+		label: string
+	}[]
+
+	// 기본 칭호가 없으면 기본 칭호 추가
+	if (honners.length === 0) {
+		honners.push({ type: 'NORMAL', label: 'NEW COMER' })
+	}
+
+	return (
+		<div className="dark:bg-background/70 min-w-screen relative min-h-screen bg-white/30 py-10 backdrop-blur-2xl">
+			<div className="mx-6">
+				<div className="mx-auto max-w-4xl">
+					<UserCard
+						userName={player.name}
+						rank={player.level}
+						avatarUrl={avatarUrl}
+						rating={Number(player.rating)}
+						friendCode={player.friendCode}
+						playCount={player.playCount}
+						lastPlayDate={lastPlayDate}
+						honners={honners}
+					/>
+					<Menu />
+
+					{/* 레이팅 곡 목록 추가 */}
+					<RatingSongs songs={player.PlayerScore} />
+				</div>
+			</div>
+		</div>
+	)
+}

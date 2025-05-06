@@ -137,26 +137,79 @@
   text-shadow: 0 0 5px #ffd700, 0 0 10px #ffd700, 0 0 15px #ffd700;
 }
 
-.text-gold {
-  background: var(--color-gold);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+.bg-platina-rainbow {
+  background: linear-gradient(
+    125deg,
+    /* 왼쪽 무지개 (0% ~ 20%) */
+    #a370ff 0%,
+    #70c8ff 2%,
+    #70ffc4 5%,
+    #ffff70 8%,
+    #ffcd70 12%,
+    #ff9aa9 15%,
+    #ff9aa9 20%,
 
-  /* ③ 은은한 빛 번짐 */
-  text-shadow:
-    0 0 4px rgba(255, 215, 0, 0.6),
-    0 0 8px rgba(255, 215, 0, 0.4),
+    /* 중앙 색상 (20% ~ 80%) */
+    #FEFDEE 30%,
+    #FBEBAE 40%,
+    #FEFDEE 70%,
+
+    /* 오른쪽 무지개 (80% ~ 100%) */
+    #ff9aa9 80%,
+    #ffcd70 82%,
+    #ffff70 85%,
+    #70ffc4 88%,
+    #70c8ff 92%,
+    #a370ff 95%,
+    #a370ff 100%
+  );
+
+  background-size: 100% auto;
+  text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
-@keyframes shine {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+.bg-rainbow {
+  background: linear-gradient(135deg, #1dffff, #0bb0ff, #f847ff, #ea0d00, #fffb00, #20d800);
+  background-size: 100% auto;
 }
-.text-gold.shimmer {
-  background-size: 200%;
-  animation: shine 3s linear infinite;
+
+.bg-rainbow::before {
+  content: "";
+  position: absolute;
+  border-radius: 0.25rem;
+  top: 1px;
+  left: 1px; 
+  right: 1px; 
+  bottom: 1px; 
+  background: white;
+  opacity: 0.5;
+}
+
+.bg-vivid-rainbow {
+  background: linear-gradient(
+    135deg,
+    #FC0FD2,
+    #B525E5,
+    #3979FE,
+    #08C2FF,
+    #06E5B1
+  );
+  
+  background-size: 100% auto;
+  text-align: center;
+  border-radius: 0.25rem;
+}
+
+.bg-vivid-rainbow:before {
+  content: "";
+  position: absolute;
+  border-radius: 0.25rem;
+  top: 1px; 
+  left: 1px; 
+  right: 1px; 
+  bottom: 1px; 
+  background: white;
+  opacity: 0.5;
 }
 
 /* 애니메이션 배경 효과 */
