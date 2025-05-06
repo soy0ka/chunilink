@@ -15,3 +15,8 @@
     opacity: 0.8;
   }
 }
+
+@keyframes rainbowShift {
+  0%   { background-position:   0% }
+  100% { background-position: 200% }
+}

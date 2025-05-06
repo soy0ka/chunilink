@@ -82,20 +82,21 @@ const getColorConfig = (value: number) => {
 	if (value < 17)
 		return {
 			color:
-				'linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff)',
+				'linear-gradient(90deg, #ffb3b3, #ffd9b3, #ffffb3, #b3ffb3, #b3d1ff, #d1b3ff, #ffb3e6)',
 			label: '무지개',
-			gradient: 'linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%)',
-			shadow: '0 10px 25px -5px rgba(255,105,180,0.3), 0 8px 10px -6px rgba(0,0,0,0.1)',
-			border: 'rgba(255,105,180,0.5)',
-			textColor: 'text-pink-800 dark:text-pink-400'
+			gradient: 'linear-gradient(135deg, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0.1) 100%)',
+			shadow: '0 6px 12px -4px rgba(0,0,0,0.06)',
+			border: 'rgba(0,0,0,0.05)',
+			textColor: 'text-zinc-700 dark:text-zinc-200'
 		}
 	return {
-		color: 'linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff)',
+		color: 'linear-gradient(90deg, #ff004c, #ff7a00, #ffee00, #00ff3c, #008cff, #5800ff, #d100ff)',
 		label: '무지개 (극)',
-		gradient: 'linear-gradient(135deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.15) 100%)',
-		shadow: '0 10px 25px -5px rgba(255,255,255,0.4), 0 8px 10px -6px rgba(0,0,0,0.1)',
-		border: 'rgba(255,255,255,0.6)',
-		textColor: 'text-pink-800 dark:text-pink-400'
+		gradient: 'linear-gradient(135deg, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0.2) 100%)',
+		shadow: '0 0 20px rgba(255,255,255,0.2), 0 8px 18px -6px rgba(0,0,0,0.15)',
+		border: 'rgba(255,255,255,0.8)',
+		textColor: 'text-pink-800 dark:text-pink-300',
+		animation: 'rainbowShift 10s linear infinite'
 	}
 }
 

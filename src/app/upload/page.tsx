@@ -173,7 +173,7 @@ function UploadPageContent() {
 
 			// 객체에서 값을 추출하고 안전하게 기본값 설정
 			const current = progressData.current || 0
-			const total = progressData.total || 8 // 기본 총 단계는 8로 설정
+			const total = progressData.total || 10 // 기본 총 단계는 10로 설정
 			const message = progressData.message || '데이터 처리 중...'
 
 			// 현재 단계가 총 단계보다 크면 현재 단계를 총 단계로 제한

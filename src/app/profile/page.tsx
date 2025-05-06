@@ -8,16 +8,19 @@ export default function ProfilePage() {
 			<div className="mx-6">
 				<div className="mx-auto max-w-4xl">
 					<UserCard
-						userName="YORU"
-						rank={32}
-						avatarUrl="https://chunithm-net-eng.com/mobile/img/d39707c2e00671e7.png"
-						rating={14.5}
-						friendCode="9000950759408"
-						playCount={222}
+						userName="CHUNILINK"
+						rank={51}
+						avatarUrl="https://chunithm-net-eng.com/mobile/img/9cf73ca9d18732f5.png"
+						rating={17.32}
+						friendCode="9000000000000"
+						playCount={1024}
 						lastPlayDate={new Date('2025-05-04:20:34')}
 						honners={[
-							{ type: 'GOLD', label: 'THE ACHIEVER／RATING 14.50' },
-							{ type: 'SILVER', label: 'CHUNITHMer SUN PLUS' }
+							{ type: 'RAINBOW', label: 'LEGEND OF VERSE' },
+							{ type: 'PLATINA', label: 'Beyond The Rainbow †VERSE†' },
+							{ type: 'GOLD', label: 'Sapphire - 100days of VERSE' },
+							{ type: 'SILVER', label: 'CHUNITHMer VERSE' },
+							{ type: 'NORMAL', label: 'NEW COMER' }
 						]}
 					/>
 					<Menu />

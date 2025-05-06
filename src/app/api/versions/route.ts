@@ -1,7 +1,7 @@
 const CHUNITHM_INTERNATIONAL_VERSIONS = [
 	{
 		version: 'CHUNITHM SUPERSTAR',
-		release: '2020-11-26'
+		release: '2020-12-07'
 	},
 	{
 		version: 'CHUNITHM SUPERSTAR PLUS',
@@ -9,7 +9,7 @@ const CHUNITHM_INTERNATIONAL_VERSIONS = [
 	},
 	{
 		version: 'CHUNITHM NEW',
-		release: '2022-03-03'
+		release: '2022-03-11'
 	},
 	{
 		version: 'CHUNITHM NEW PLUS',

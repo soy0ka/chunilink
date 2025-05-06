@@ -19,7 +19,7 @@ export default function Bookmarklet() {
 	return (
 		<Box className="p-4 md:p-6">
 			<h2 className="mb-4 text-xl font-bold text-gray-900 dark:text-white">
-				북마크릿으로 데이터 가져오기
+				츄니링커로 데이터 가져오기
 			</h2>
 
 			<div className="mb-6 rounded-lg bg-blue-50 p-3 dark:bg-blue-900/20">

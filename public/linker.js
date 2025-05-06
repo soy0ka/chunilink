@@ -5,6 +5,23 @@
  * 수집하여 JSON 형태로 가공한 후 저장하거나 외부 도구에 전송합니다.
  */
 
+const PlayRank = {
+  0: 'D',
+  1: 'C',
+  2: 'B',
+  3: 'BB',
+  4: 'BBB',
+  5: 'A',
+  6: 'AA',
+  7: 'AAA',
+  8: 'S',
+  9: 'S+',
+  10: 'SS',
+  11: 'SS+',
+  12: 'SSS',
+  13: 'SSS+',
+}
+
 // 유틸리티 함수 모음
 const utils = {
 	/**
@@ -108,45 +125,77 @@ const utils = {
 			score = Number(scoreElement.textContent.replaceAll(',', ''))
 		}
 
-		// 클리어 정보 파싱
-		let isAllJustice = false
-		let isFullCombo = false
-		let fullChainLv = 0 // 0: 미풀체인, 1: 구풀체인, 2: 금풀체인
-		const lampImgsDiv = formElement.querySelector('.play_musicdata_icon')
-		if (lampImgsDiv) {
-			const lampImgs = lampImgsDiv.querySelectorAll('img')
-			for (const img of lampImgs) {
-				const src = img.src
-
-				if (src.includes('alljustice')) {
-					isAllJustice = true
-					isFullCombo = true
-				} else if (src.includes('fullcombo')) {
-					isFullCombo = true
-				}
-
-				if (src.includes('fullchain2')) {
-					fullChainLv = 2
-				} else if (src.includes('fullchain')) {
-					fullChainLv = 1
-				}
-			}
-		}
-
-		// 곡 ID 파싱
-		const idx = Number.parseInt(
+    const idx = Number.parseInt(
 			formElement.querySelector('input[type="hidden"][name="idx"]')?.getAttribute('value') || '0'
 		)
 
-		return {
-			title,
-			difficulty,
-			score,
-			isAllJustice,
-			isFullCombo,
-			fullChainLv,
-			idx
-		}
+    if (score !== 0) {
+      // 클리어 정보 파싱
+      let clearType = "FAIL"
+      let comboType = "NO_COMBO"
+      let CtCType = "NO_SYNC"
+      let playRank = "D"
+      const lampImgsDiv = formElement.querySelector('.play_musicdata_icon')
+      if (lampImgsDiv) {
+        const lampImgs = lampImgsDiv.querySelectorAll('img')
+        for (const img of lampImgs) {
+          const src = img.src
+          if (src.includes('icon_clear.png')) {
+            clearType = "CLEAR"
+          } else if (src.includes('icon_hard.png')) {
+            clearType = "HARD"
+          }else if (src.includes('icon_brave.png')) {
+            clearType = "BRAVE"
+          } else if (src.includes('icon_absolute.png')) {
+            clearType = "ABSOLUTE"
+          } else if (src.includes('icon_rank_catastrophy')) {
+            clearType = "CATASTROPHY"
+          }
+
+          if (src.includes('icon_fullcombo.png')) {
+            comboType = "FULL_COMBO"
+          } else if (src.includes('icon_alljustice.png')) {
+            comboType = "ALL_JUSTICE"
+          } else if (src.includes('icon_alljusticecritical.png')) {
+            comboType = "ALL_JUSTICE_CRITICAL"
+          }
+
+          if (src.includes('icon_fullchain.png')) {
+            CtCType = "FULL_CHAIN"
+          } else if (src.includes('icon_fullchain2.png')) {
+            CtCType = "FULL_CHAIN_2"
+          }
+
+          // 랭크 이미지에서 점수 추출
+          const match = src.match(/icon_rank_([0-9]+)\.png/)
+          if (match) {
+            const rankValue = Number(match[1])
+            playRank = PlayRank[rankValue] || 'D'
+          }
+        }
+      }
+      return {
+        title,
+        difficulty,
+        score,
+        playRank,
+        clearType,
+        comboType,
+        CtCType,
+        idx
+      }
+    } else {
+      return {
+        title,
+        difficulty,
+        score,
+        playRank: null,
+        clearType: null,
+        comboType: null,
+        CtCType: null,
+        idx
+      }
+    }
 	}
 }
 
@@ -168,6 +217,7 @@ async function main() {
 		home: `${baseUrl}home/`,
 		music: `${baseUrl}record/musicGenre/`,
     basic: `${baseUrl}home/playerData/`,
+    character: `${baseUrl}/collection/characterList/`,
 		ratingsBest: `${baseUrl}home/playerData/ratingDetailBest/`,
 		ratingsNew: `${baseUrl}home/playerData/ratingDetailRecent/`
 	}
@@ -187,7 +237,7 @@ async function main() {
 	}
 
 	// 진행 상태 표시 설정
-	const fullProgressCount = 9
+	const fullProgressCount = 10
 	let progressCount = 1
 	
 	// 츄니링커에 진행 상태 업데이트 메시지 전송
@@ -208,19 +258,28 @@ async function main() {
 		}
 	}
 
-	// 1. 플레이어 데이터 수집 시작 알림
+	// 1. 플레이어 데이터 수집
 	updateProgressToLinker(progressCount, fullProgressCount, '플레이어 프로필을 가져오는 중...')
 	await utils.sleep(1000)
 	const playerData = await collectPlayerData(homeDoc)
   updateProgressToLinker(progressCount, fullProgressCount, '플레이어 프로필 수집 완료')
 
-  // 1-2. 추가 플레이어 데이터 수집
+  // 1-2. 플레이어 데이터 수집
+  progressCount++
   const PlayerDataDoc = await utils.fetchPageDoc(urls.basic)
-  updateProgressToLinker(progressCount, fullProgressCount, '추가 플레이어 데이터를 가져오는 중...')
+  updateProgressToLinker(progressCount, fullProgressCount, '플레이어 데이터를 가져오는 중...')
   const additionalPlayerData = await collectAdditionalPlayerData(PlayerDataDoc)
   playerData.friendCode = additionalPlayerData.friendCode
   playerData.totalPlayCount = additionalPlayerData.totalPlayCount
-  updateProgressToLinker(progressCount, fullProgressCount, '추가 플레이어 데이터 수집 완료')
+  updateProgressToLinker(progressCount, fullProgressCount, '플레이어 데이터 수집 완료')
+
+  // 1-3. 캐릭터 데이터 수집
+  progressCount++
+  const characterDataDoc = await utils.fetchPageDoc(urls.character)
+  updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터를 가져오는 중...')
+  const characterData = await collectCharacterData(characterDataDoc)
+  playerData.character = characterData
+  updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터 수집 완료')
 
 	// 2. 악곡 데이터 수집 준비
 	progressCount++
@@ -370,6 +429,46 @@ async function main() {
 		}
 	}
 
+  async function collectCharacterData(characterDoc) {
+    const characterData = []
+
+    const characterList = characterDoc.querySelector('#list')
+
+    for (const character of characterList.children) {
+      if (!character.classList.contains('box01')) continue
+
+      // 캐릭터 ID
+      const characterId = character.querySelector('input[name="chara"]')?.value || ''
+
+      // 캐릭터 이름
+      const characterName = character.querySelector('.character_name_block a')?.textContent?.trim() || ''
+
+      // 캐릭터 이미지
+      const imgElem = character.querySelector('.list_chara_img img')
+      const characterImg = imgElem?.getAttribute('data-original') || imgElem?.src || ''
+      const bgImage = character.querySelector('.list_chara_img')?.getAttribute('style')
+      const background = bgImage ? bgImage.replace(/.*url\(([^)]+)\).*/, '$1') : ''
+
+      // 캐릭터 레벨 (숫자 이미지 여러 개로 구성)
+      let characterLevel = ''
+      const levelImgs = character.querySelectorAll('.character_list_rank_num img')
+      for (const img of levelImgs) {
+        const match = img.src.match(/num_s_lv_([0-9]+)\.png/)
+        if (match) characterLevel += match[1]
+      }
+      characterLevel = characterLevel ? Number(characterLevel) : null
+
+      characterData.push({
+        id: characterId,
+        name: characterName,
+        img: characterImg,
+        rank: characterLevel,
+        background
+      })
+    }
+    return characterData
+  }
+
 	/**
 	 * 악곡 데이터를 수집합니다.
 	 * @param {string} musicUrl - 음악 정보 기본 URL
@@ -487,10 +586,11 @@ async function main() {
 			const scoreElement = form.querySelector('.play_musicdata_highscore')?.querySelector('span')
 			const score = scoreElement ? Number(scoreElement.textContent.replaceAll(',', '')) : 0
 
-			// AJ/FC 정보를 기존 데이터에서 찾기
-			let isAllJustice = false
-			let isFullCombo = false
-			let fullChainLv = 0
+			// 기본값 설정
+			let playRank = "D"
+			let clearType = "FAIL"
+			let comboType = "NO_COMBO"
+			let CtCType = "NO_SYNC"
 
 			// 기존 데이터에서 일치하는 곡 정보 찾기
 			const existingMusic = musicData.find(
@@ -498,9 +598,10 @@ async function main() {
 			)
 
 			if (existingMusic) {
-				isAllJustice = existingMusic.isAllJustice
-				isFullCombo = existingMusic.isFullCombo
-				fullChainLv = existingMusic.fullChainLv
+				playRank = existingMusic.playRank || "D"
+				clearType = existingMusic.clearType || "FAIL"
+				comboType = existingMusic.comboType || "NO_COMBO"
+				CtCType = existingMusic.CtCType || "NO_SYNC"
 			}
 
 			const idx = Number.parseInt(
@@ -511,9 +612,10 @@ async function main() {
 				title,
 				difficulty,
 				score,
-				isAllJustice,
-				isFullCombo,
-				fullChainLv,
+				playRank,
+				clearType,
+				comboType,
+				CtCType,
 				idx
 			})
 		}
