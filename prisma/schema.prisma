@@ -1,0 +1,235 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid()) @map("id")
+  name          String?   @map("name")
+  email         String?   @unique @map("email")
+  emailVerified DateTime? @map("email_verified")
+  image         String?   @map("image")
+
+  accounts Account[]
+  sessions Session[]
+  player   Player[]
+
+  @@map("user")
+}
+
+model Account {
+  id                String  @id @default(cuid()) @map("id")
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
+}
+
+model Session {
+  id           String   @id @default(cuid()) @map("id")
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime @map("expires")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model VerificationToken {
+  identifier String   @map("identifier")
+  token      String   @unique @map("token")
+  expires    DateTime @map("expires")
+
+  @@unique([identifier, token])
+  @@map("verification_token")
+}
+
+enum PlayerRegion {
+  JP
+  ASIA
+}
+
+model Player {
+  id         String   @id @default(cuid()) @map("id")
+  userId     String   @map("user_id")
+  slug       String   @unique @map("slug")
+  friendCode String   @map("friend_code")
+  region     PlayerRegion @map("region") @default(ASIA)
+  level      Int
+
+  rating     Decimal @map("rating") @db.Decimal(7, 4) @default(0)
+  newRating  Decimal @map("new_rating") @db.Decimal(7, 4) @default(0)
+  oldRating  Decimal @map("old_rating") @db.Decimal(7, 4) @default(0)
+
+  characterId  String   @map("character_id")
+  character    Character @relation(fields: [characterId], references: [id])
+
+  User User[]
+  PlayerScore PlayerScore[]
+}
+
+model Character {
+  id         String   @id
+  name       String   @map("name")
+  imageUrl   String   @map("image_url")
+  players   Player[]
+}
+
+model PlayerScore {
+  id           String   @id @default(cuid()) @map("id")
+  rating       Decimal? @map("rating") @db.Decimal(7, 4)
+  playerId     String   @map("player_id")
+  songId       String   @map("song_id")
+  difficulty   DifficultyCode
+  playRank     PlayRank   @map("play_rank") @default(D)
+  score        Int
+  clearType    ClearType  @map("clear_type")
+  comboType    ComboType? @map("combo_type")
+  cToCType     CToCType?  @map("ctoc_type")
+
+  player Player @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  song   Song   @relation(fields: [songId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, songId, difficulty])
+}
+
+model Song {
+  id           String           @id // ChunithmNet ID
+  title        String
+  titleKana    String?          @map("title_kana")
+  titlekorean  String?          @map("title_korean")
+  artist       String?          @map("artist_name")
+  imageUrl     String           @map("image_url")
+  bpm          Int
+  version      Version
+  genre        Genre
+  releaseJP    DateTime?         @map("release_jp_date")
+  releaseIntl  DateTime?         @map("release_intl_date")
+  wikiUrl      String           @map("wiki_url")
+  difficulties SongDifficulty[]
+
+  updatedAt DateTime @default(now()) @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  PlayerScore PlayerScore[]
+}
+
+model SongDifficulty {
+  id           String         @id @default(uuid())
+  songId       String         @map("song_id")
+  difficulty   DifficultyCode
+  designer     String?        @map("designer_name")
+  displayLevel String            @map("level_disply")
+  level        Decimal        @map("level_value") @db.Decimal(4, 2)
+
+  chartPath String? @map("chart_path")
+
+  totalNotes Int @map("notes_total")
+  notesTap   Int @map("notes_tap")
+  notesHold  Int @map("notes_hold")
+  notesSlide Int @map("notes_slide")
+  notesAir   Int @map("notes_air")
+  notesFlick Int @map("notes_flick")
+
+  song Song @relation(fields: [songId], references: [id])
+
+  @@unique([songId, difficulty])
+}
+
+enum DifficultyCode {
+  BASIC
+  ADVANCED
+  EXPERT
+  MASTER
+  ULTIMA
+  WORLDS_END
+}
+
+enum Version {
+  CHUNITHM
+  CHUNITHM_PLUS
+  AIR
+  AIR_PLUS
+  STAR
+  STAR_PLUS
+  AMAZON
+  AMAZON_PLUS
+  CRYSTAL
+  CRYSTAL_PLUS
+  PARADISE
+  PARADISE_LOST
+  SUPERSTAR
+  SUPERSTAR_PLUS
+  NEW
+  NEW_PLUS
+  SUN
+  SUN_PLUS
+  LUMINOUS
+  LUMINOUS_PLUS
+  VERSE
+}
+
+enum Genre {
+  POPS_ANIME @map("POPS_AND_ANIME")
+  NICONICO
+  TOUHOU     @map("TOUHOU_PROJECT")
+  ORIGINAL
+  VARIETY
+  IRODORI   @map("IRODORIMIDORI")
+  GEKIMAI
+}
+
+enum PlayRank {
+  D
+  C
+  B
+  BB
+  BBB
+  A
+  AA
+  AAA
+  S
+  S_PLUS
+  SS
+  SS_PLUS
+  SSS
+  SSS_PLUS
+}
+
+enum ComboType {
+  FULL_COMBO
+  ALL_JUSTICE
+  ALL_JUSTICE_CRITICAL
+}
+
+enum ClearType {
+  FAIL
+  CLEAR
+  HARD
+  BRAVE
+  ABSOLUTE
+  CATASTROPHY
+}
+
+enum CToCType {
+  FULL_CHAIN
+  FULL_CHAIN_PLUS // AJ, AJC Full Chain
+}
