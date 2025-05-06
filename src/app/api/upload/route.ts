@@ -2,7 +2,7 @@
 import { getServerAuthSession } from '@/library/auth'
 import { prisma } from '@/library/prismaSingleton'
 import { ChunithmData, PrismaEnumMap } from '@/types/chunithm'
-import { HonorClass } from '@prisma/client'
+import { HonorClass, RatingType } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/binary'
 import { randomUUID } from 'crypto'
 import { NextRequest, NextResponse } from 'next/server'
@@ -293,6 +293,16 @@ export async function POST(request: NextRequest) {
         // 레이팅 계산 (보면정수 사용)
         const levelValue = songDifficulty?.level || 0;
         const calculatedRating = calculateRating(scoreData.score, levelValue || new Decimal(0));
+        
+        // ratingType 설정: best에 있으면 OLD, new에 있으면 NEW, 아니면 NONE
+        let ratingType
+        if (chunithmData.best && chunithmData.best.some(s => s.idx === scoreData.idx && s.difficulty === scoreData.difficulty)) {
+          ratingType = RatingType.OLD
+        } else if (chunithmData.new && chunithmData.new.some(s => s.idx === scoreData.idx && s.difficulty === scoreData.difficulty)) {
+          ratingType = RatingType.NEW
+        } else {
+          ratingType = RatingType.NONE
+        }
 
         // 새 점수 데이터
         const newScoreData = {
@@ -305,7 +315,7 @@ export async function POST(request: NextRequest) {
           comboType: scoreData.comboType ? mapComboTypeToPrisma(scoreData.comboType) : null,
           cToCType: scoreData.CtCType ? mapCToCTypeToPrisma(scoreData.CtCType) : null,
           rating: calculatedRating,
-          ratingType: 'INTERNAL' as any // 내부 계산 레이팅 타입 추가
+          ratingType: ratingType,
         }
 
         const existingScore = existingScoreMap.get(key)
