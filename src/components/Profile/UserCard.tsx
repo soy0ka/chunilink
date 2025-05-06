@@ -1,4 +1,4 @@
-import { CHUNITHM_INTERNATIONAL_VERSIONS } from '@/app/api/versions/route'
+import { CHUNITHM_INTERNATIONAL_VERSIONS } from '@/constants/version'
 import Avatar from '@UI/Avatar'
 import FriendCode from '@UI/FriendCode'
 import Honner from '@UI/Honner'
