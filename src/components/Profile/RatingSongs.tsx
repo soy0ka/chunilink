@@ -85,7 +85,7 @@ const getRatingTextColor = (value: number) => {
 	if (value < 16)
 		return 'bg-clip-text text-transparent bg-gradient-to-r from-amber-200 to-yellow-100' // 백금
 	if (value < 17)
-		return 'bg-clip-text text-transparent bg-linear-to-r/longer from-pink-600 to-purple-500'
+		return 'bg-clip-text text-transparent bg-linear-to-r/longer from-pink-400 to-purple-400'
 	return 'bg-clip-text text-transparent bg-gradient-to-r from-zinc-700 to-zinc-500'
 }
 
@@ -99,7 +99,7 @@ const getClearTypeStyle = (clearType: string) => {
 		case 'CATASTROPHY':
 			return 'bg-rainbow text-gray-700'
 		case 'FAIL':
-			return 'bg-gradient-to-r from-red-500 to-red-400 dark:from-red-600 dark:to-red-500 text-white'
+			return 'bg-gradient-to-r from-red-700 to-red-500 dark:from-red-800 dark:to-red-600 text-white'
 		default:
 			return 'bg-gradient-to-r from-green-500 to-emerald-400 dark:from-green-600 dark:to-emerald-500' // 기본
 	}
