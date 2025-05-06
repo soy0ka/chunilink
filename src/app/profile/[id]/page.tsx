@@ -1,4 +1,3 @@
-import { Menu } from '@/components/Profile/Menubar'
 import RatingSongs from '@/components/Profile/RatingSongs'
 import UserCard from '@/components/Profile/UserCard'
 import { getServerAuthSession } from '@/library/auth'
@@ -6,23 +5,6 @@ import { prisma } from '@/library/prismaSingleton'
 import { Prisma, RatingType } from '@prisma/client'
 import { notFound } from 'next/navigation'
 
-// PlayerScore 타입 정의
-type PlayerScoreWithSong = Prisma.PlayerScoreGetPayload<{
-	include: {
-		song: {
-			select: {
-				id: true
-				title: true
-				artist: true
-				imageUrl: true
-				level: true
-				difficulties: true
-			}
-		}
-	}
-}>
-
-// 플레이어 데이터 타입 정의
 type PlayerWithRelations = Prisma.PlayerGetPayload<{
 	include: {
 		User: {
@@ -31,7 +13,19 @@ type PlayerWithRelations = Prisma.PlayerGetPayload<{
 				image: true
 			}
 		}
-		PlayerScore: true
+		PlayerScore: {
+			include: {
+				song: {
+					select: {
+						id: true
+						title: true
+						artist: true
+						imageUrl: true
+						difficulties: true
+					}
+				}
+			}
+		}
 		PlayerCharacter: {
 			include: {
 				character: true
@@ -43,25 +37,28 @@ type PlayerWithRelations = Prisma.PlayerGetPayload<{
 			}
 		}
 	}
-}> & {
-	PlayerScore: PlayerScoreWithSong[]
-}
+}>
 
-// 메타데이터 동적 생성
 export async function generateMetadata({ params }: { params: { id: string } }) {
-	// params를 비동기적으로 처리
 	const id = params.id
-	const player = await getPlayerData(id)
-
-	if (!player) {
+	if (id === '%40me') {
 		return {
-			title: '사용자를 찾을 수 없습니다 | CHUNILINK'
+			title: '내 프로필 | CHUNILINK',
+			description: '내 프로필 페이지입니다.'
 		}
-	}
+	} else {
+		const player = await getPlayerData(id)
 
-	return {
-		title: `${player.name || 'Unknown'} (${player.rating}) | CHUNILINK`,
-		description: `${player.name || 'Unknown'}님의 츄니즘 프로필입니다.`
+		if (!player) {
+			return {
+				title: '사용자를 찾을 수 없습니다 | CHUNILINK'
+			}
+		}
+
+		return {
+			title: `${player.name || 'Unknown'} (${player.rating}) | CHUNILINK`,
+			description: `${player.name || 'Unknown'}님의 츄니즘 프로필입니다.`
+		}
 	}
 }
 
@@ -70,7 +67,7 @@ async function getPlayerData(id: string): Promise<PlayerWithRelations | null> {
 	const session = await getServerAuthSession()
 	try {
 		// '@me'인 경우 현재 사용자의 플레이어 정보 조회
-		if (id === '@me') {
+		if (id === '@me' || id === '%40me') {
 			if (!session?.user?.id) {
 				return null
 			}
@@ -220,7 +217,7 @@ export default async function ProfilePage({ params }: { params: { id: string } }
 						lastPlayDate={lastPlayDate}
 						honners={honners}
 					/>
-					<Menu />
+					{/* <Menu /> */}
 
 					{/* 레이팅 곡 목록 추가 */}
 					<RatingSongs songs={player.PlayerScore} />

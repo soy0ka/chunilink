@@ -23,8 +23,12 @@ type PlayerScoreWithSong = Prisma.PlayerScoreGetPayload<{
 				title: true
 				artist: true
 				imageUrl: true
-				level: true
-				difficulties: true
+				difficulties: {
+					select: {
+						difficulty: true
+						level: true
+					}
+				}
 			}
 		}
 	}
@@ -200,11 +204,8 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ type, label, className }) => 
 
 // 노래 카드 컴포넌트
 const SongCard = ({ song, index }: { song: PlayerScoreWithSong; index: number }) => {
-	const diffInfo =
-		difficultyMap[
-			song.song.difficulties.find((diff) => diff.difficulty === song.difficulty)
-				?.difficulty as Difficulty
-		]
+	const diffInfo = song.song.difficulties.find((diff) => diff.difficulty === song.difficulty)
+	const difficultyColor = difficultyMap[diffInfo?.difficulty as Difficulty]
 
 	// 플레이랭크 표시 및 색상 설정
 	const displayPlayRank = song.playRank?.replace('_PLUS', '+') || ''
@@ -236,10 +237,10 @@ const SongCard = ({ song, index }: { song: PlayerScoreWithSong; index: number })
 					{index + 1}
 				</div>
 				<div
-					className={`absolute bottom-2 right-2 ${diffInfo.color} flex min-w-[32px] flex-col items-center rounded px-1.5 py-1 text-xs font-bold text-white`}
+					className={`absolute bottom-2 right-2 ${difficultyColor.color} flex min-w-[32px] flex-row items-center space-x-1 rounded px-1.5 py-1 text-xs font-bold text-white`}
 				>
-					<span>{diffInfo.abbr}</span>
-					<span>{song.song.level}</span>
+					<span>{diffInfo?.difficulty}</span>
+					<span>{String(diffInfo?.level)}</span>
 				</div>
 
 				<div
