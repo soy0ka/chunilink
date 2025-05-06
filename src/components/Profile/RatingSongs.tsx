@@ -62,7 +62,7 @@ const difficultyMap: Record<Difficulty, { abbr: string; color: string }> = {
 	},
 	ULTIMA: {
 		abbr: 'ULTIMA',
-		color: 'bg-black/50'
+		color: 'bg-gradient-to-r from-black via-red-500 via-50% to-black'
 	},
 	WORLD_END: {
 		abbr: "WORLD'S END",
