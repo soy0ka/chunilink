@@ -1,15 +1,9 @@
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-	title: 'CHUNITHM 성과 허브 | 리듬게임 성과 공유 플랫폼',
-	description:
-		'자신의 CHUNITHM 리듬게임 성과를 쉽게 업로드하고 공유하세요. 플레이어들과 스코어를 비교하고 성장을 기록할 수 있는 비공식 커뮤니티입니다.',
-	keywords: ['chunithm', '리듬게임', '성과 공유', '스코어 기록', '아케이드 게임'],
+	title: 'CHUNILINK',
 	openGraph: {
-		title: 'CHUNITHM 성과 허브 | 리듬게임 성과 공유 플랫폼',
-		description:
-			'자신의 CHUNITHM 리듬게임 성과를 쉽게 업로드하고 공유하세요. 플레이어들과 스코어를 비교하고 성장을 기록할 수 있는 비공식 커뮤니티입니다.',
-		images: [{ url: '/images/og-image.png', width: 1200, height: 630 }],
+		title: 'CHUNILINK',
 		type: 'website'
 	}
 }

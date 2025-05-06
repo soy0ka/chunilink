@@ -3,6 +3,7 @@ import UserCard from '@/components/Profile/UserCard'
 import { getServerAuthSession } from '@/library/auth'
 import { prisma } from '@/library/prismaSingleton'
 import { Prisma, RatingType } from '@prisma/client'
+import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
 type PlayerWithRelations = Prisma.PlayerGetPayload<{
@@ -39,7 +40,7 @@ type PlayerWithRelations = Prisma.PlayerGetPayload<{
 	}
 }>
 
-export async function generateMetadata({ params }: { params: { id: string } }) {
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
 	const id = params.id
 	if (id === '%40me') {
 		return {
@@ -66,58 +67,25 @@ export async function generateMetadata({ params }: { params: { id: string } }) {
 async function getPlayerData(id: string): Promise<PlayerWithRelations | null> {
 	const session = await getServerAuthSession()
 	try {
-		// '@me'인 경우 현재 사용자의 플레이어 정보 조회
 		if (id === '@me' || id === '%40me') {
 			if (!session?.user?.id) {
-				return null
+				return notFound()
 			}
 
 			const player = await prisma.player.findFirst({
 				where: {
 					userId: session.user.id
 				},
-				include: {
-					User: {
-						select: {
-							name: true,
-							image: true
-						}
-					},
-					PlayerScore: {
-						orderBy: {
-							rating: 'desc'
-						},
-						where: {
-							OR: [{ ratingType: RatingType.NEW }, { ratingType: RatingType.OLD }]
-						},
-						include: {
-							song: {
-								select: {
-									id: true,
-									title: true,
-									artist: true,
-									imageUrl: true,
-									difficulties: true
-								}
-							}
-						}
-					},
-					PlayerCharacter: {
-						include: {
-							character: true
-						}
-					},
-					PlayerHonor: {
-						include: {
-							honor: true
-						},
-						orderBy: {
-							displayOrder: 'asc'
-						}
-					}
+				select: {
+					slug: true
 				}
 			})
-			return player
+
+			if (!player) {
+				return notFound()
+			} else {
+				return await getPlayerData(player.slug)
+			}
 		}
 
 		// 일반적인 경우: slug로 플레이어 찾기
@@ -171,7 +139,6 @@ async function getPlayerData(id: string): Promise<PlayerWithRelations | null> {
 }
 
 export default async function ProfilePage({ params }: { params: { id: string } }) {
-	// params를 비동기적으로 처리
 	const id = params.id
 	const player = await getPlayerData(id)
 
@@ -180,13 +147,11 @@ export default async function ProfilePage({ params }: { params: { id: string } }
 	// 최근 플레이 날짜 - player.lastPlayed 또는 lastUpdated를 사용
 	const lastPlayDate = player.lastPlayed || player.lastUpdated || new Date()
 
-	// 캐릭터 정보 가져오기
 	const favoriteCharacter = player.PlayerCharacter.find((pc) => pc.isFavorite)
 	const avatarUrl =
 		`https://chunithm-net-eng.com/mobile/img/${favoriteCharacter?.character.imageUrl}` ||
 		'/default-avatar.png'
 
-	// 플레이어 칭호 가져오기
 	const allowedHonorTypes = ['GOLD', 'SILVER', 'PLATINA', 'RAINBOW', 'NORMAL'] as const
 	type AllowedHonorType = (typeof allowedHonorTypes)[number]
 
