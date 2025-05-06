@@ -204,7 +204,7 @@ const utils = {
  */
 async function main() {
 	// 설정 변수
-	const CHUNILINK_URL = 'http://localhost:3000'
+	const CHUNILINK_URL = 'https://chuni.yoru.icu'
 	const VERSION = '1.0.0'
 	const difficulties = ['Basic', 'Advanced', 'Expert', 'Master', 'Ultima']
 	const isInternational = location.hostname === 'chunithm-net-eng.com'
