@@ -40,8 +40,8 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-  --color-chunihtm-basic: #009F7B;
-  --color-chunihtm-advanced: #F37901;
+  --color-chunithm-basic: #009F7B;
+  --color-chunithm-advanced: #F37901;
   --color-chunithm-expert: #E92929;
   --color-chunithm-master: #8C1BE1;
 
