@@ -73,3 +73,59 @@
   opacity: 0.5;
   border-radius: 0.75rem;
 }
+
+.rating-box-green {
+  background: linear-gradient(135deg, rgba(36,241,23,0.25) 0%, rgba(36,241,23,0.1) 100%);
+  box-shadow: 0 10px 25px -5px rgba(36,241,23,0.3), 0 8px 10px -6px rgba(0,0,0,0.1);
+  border: 1.5px solid rgba(36,241,23,0.5);
+  color: #24F117;
+}
+
+.rating-box-orange {
+  background: linear-gradient(135deg, rgba(250,185,10,0.25) 0%, rgba(250,185,10,0.1) 100%);
+  box-shadow: 0 10px 25px -5px rgba(250,185,10,0.3), 0 8px 10px -6px rgba(0,0,0,0.1);
+  border: 1.5px solid rgba(250,185,10,0.5);
+  color: #FAB90A;
+}
+
+.rating-box-red {
+  background: linear-gradient(135deg, rgba(247,81,102,0.25) 0%, rgba(247,81,102,0.1) 100%);
+  box-shadow: 0 10px 25px -5px rgba(247,81,102,0.3), 0 8px 10px -6px rgba(0,0,0,0.1);
+  border: 1.5px solid rgba(247,81,102,0.5);
+  color: #F75166;
+}
+
+.rating-box-purple {
+  background: linear-gradient(135deg, rgba(236,86,229,0.25) 0%, rgba(236,86,229,0.1) 100%);
+  box-shadow: 0 10px 25px -5px rgba(236,86,229,0.3), 0 8px 10px -6px rgba(0,0,0,0.1);
+  border: 1.5px solid rgba(236,86,229,0.5);
+  color: #EC56E5;
+}
+
+.rating-box-bronze {
+  background: linear-gradient(135deg, rgba(205,127,50,0.25) 0%, rgba(205,127,50,0.1) 100%);
+  box-shadow: 0 10px 25px -5px rgba(205,127,50,0.3), 0 8px 10px -6px rgba(0,0,0,0.1);
+  border: 1.5px solid rgba(205,127,50,0.5);
+  color: #CD7F32;
+}
+
+.rating-box-silver {
+  background: linear-gradient(135deg, rgba(192,192,192,0.25) 0%, rgba(192,192,192,0.1) 100%);
+  box-shadow: 0 10px 25px -5px rgba(192,192,192,0.3), 0 8px 10px -6px rgba(0,0,0,0.1);
+  border: 1.5px solid rgba(192,192,192,0.5);
+  color: #C0C0C0;
+}
+
+.rating-box-gold {
+  background: linear-gradient(135deg, rgba(255,215,0,0.45) 0%, rgba(255,215,0,0.75) 100%);
+  box-shadow: 0 10px 25px -5px rgba(255,215,0,0.4), 0 8px 10px -6px rgba(0,0,0,0.1);
+  border: 1.5px solid rgba(255,215,0,0.6);
+  color: #FFD700;
+}
+
+.rating-box-platinum {
+  background: linear-gradient(135deg, #E8ECEF 0%, #D1D9DF 100%);
+  box-shadow: 0 10px 25px -5px rgba(209,217,223,0.4), 0 8px 10px -6px rgba(0,0,0,0.1);
+  border: 1.5px solid rgba(190,200,210,0.6);
+  color: #7A8A99;
+}
