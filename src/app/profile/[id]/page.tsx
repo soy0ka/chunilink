@@ -40,8 +40,10 @@ type PlayerWithRelations = Prisma.PlayerGetPayload<{
 	}
 }>
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-	const id = params.id
+export async function generateMetadata(props: {
+	params: Promise<{ id: string }>
+}): Promise<Metadata> {
+	const id = (await props.params).id
 	if (id === '%40me') {
 		return {
 			title: '내 프로필 | CHUNILINK',
@@ -138,11 +140,11 @@ async function getPlayerData(id: string): Promise<PlayerWithRelations | null> {
 	}
 }
 
-export default async function ProfilePage({ params }: { params: { id: string } }) {
-	const id = params.id
+export default async function ProfilePage(props: { params: Promise<{ id: string }> }) {
+	const { id } = await props.params
 	const player = await getPlayerData(id)
 
-	if (!player) notFound()
+	if (!player) return notFound()
 
 	// 최근 플레이 날짜 - player.lastPlayed 또는 lastUpdated를 사용
 	const lastPlayDate = player.lastPlayed || player.lastUpdated || new Date()
