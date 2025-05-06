@@ -124,8 +124,8 @@
 }
 
 .rating-box-platinum {
-  background: linear-gradient(135deg, #E8ECEF 0%, #D1D9DF 100%);
-  box-shadow: 0 10px 25px -5px rgba(209,217,223,0.4), 0 8px 10px -6px rgba(0,0,0,0.1);
-  border: 1.5px solid rgba(190,200,210,0.6);
-  color: #7A8A99;
+  background: linear-gradient(135deg, #FFFFE4 0%, #FFF3A9 100%);
+  box-shadow: 0 10px 25px -5px rgba(220,220,220,0.4), 0 8px 10px -6px rgba(0,0,0,0.1);
+  border: 1.5px solid #e5e596;
+  color: #d1d162;
 }
