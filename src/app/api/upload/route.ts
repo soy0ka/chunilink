@@ -430,8 +430,17 @@ function calculateRating(score: number, levelValue: Decimal): number {
 
 // 고유한 슬러그 생성 함수
 function generateSlug(name: string): string {
-  const baseSlug = name.toLowerCase().replace(/[^a-z0-9]/gi, '')
+  const normalized = name
+    .replace(/[\uFF21-\uFF3A]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)) // 전각 대문자
+    .replace(/[\uFF41-\uFF5A]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0)) // 전각 소문자
+    .replace(/[\uFF10-\uFF19]/g, ch => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0))
 
-  const uniqueId = randomUUID().substring(0, 8)
+  let baseSlug = normalized.toLowerCase().replace(/[^a-z0-9]/gi, '')
+  
+  if (!baseSlug) {
+    baseSlug = 'chunithmer'
+  }
+  
+  const uniqueId = randomUUID().substring(0, 8);
   return `${baseSlug}-${uniqueId}`
 }
