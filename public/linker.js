@@ -92,7 +92,7 @@ const utils = {
 		if (styleAttribute.includes('honor_bg_gold')) return 'GOLD'
 		if (styleAttribute.includes('honor_bg_silver')) return 'SILVER'
 		if (styleAttribute.includes('honor_bg_bronze')) return 'BRONZE'
-		if (styleAttribute.includes('honor_bg_platinum')) return 'PLATINA'
+		if (styleAttribute.includes('honor_bg_platina')) return 'PLATINA'
 		if (styleAttribute.includes('honor_bg_rainbow')) return 'RAINBOW'
 		return 'NORMAL'
 	},
