@@ -281,6 +281,20 @@ async function main() {
   playerData.character = characterData
   updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터 수집 완료')
 
+  const favoriteCharacter = homeDoc.querySelector('.player_chara')
+  const favoriteCharacterImgSrc = favoriteCharacter.querySelector('img')?.src
+
+  // 	https://chunithm-net-eng.com/mobile/img/d39707c2e00671e7.png -> d39707c2e00671e7.png 만 추출해서 
+  // characterData 배열에서 img 속성과 비교하여 해당 캐릭터를 찾음
+
+  const favoriteCharacterData = characterData.find((character) => {
+    const characterImgSrc = character.img
+    return favoriteCharacterImgSrc.includes(characterImgSrc)
+  }
+  )
+  playerData.favoriteCharacter = favoriteCharacterData
+  updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터 수집 완료')
+
 	// 2. 악곡 데이터 수집 준비
 	progressCount++
 	updateProgressToLinker(progressCount, fullProgressCount, '악곡 데이터 가져오기 준비 중...')
@@ -317,9 +331,19 @@ async function main() {
 	updateProgressToLinker(progressCount, fullProgressCount, '데이터 처리 중...')
 	
 	// 데이터 조합
-	playerData.best = bestMusicData
-	playerData.new = newMusicData
-	playerData.score = musicData
+	playerData.best = bestMusicData.filter(score => score.score > 0)
+	playerData.new = newMusicData.filter(score => score.score > 0)
+	playerData.score = musicData.filter(score => score.score > 0)
+
+	// 필터링 결과 로깅
+	const totalScores = bestMusicData.length + newMusicData.length + musicData.length
+	const filteredScores = playerData.best.length + playerData.new.length + playerData.score.length
+	const removedScores = totalScores - filteredScores
+	console.log(`점수가 0인 ${removedScores}개의 곡 데이터가 제외되었습니다. 총 ${filteredScores}곡 전송`)
+	
+	// 진행 상태 메시지 업데이트
+	updateProgressToLinker(progressCount, fullProgressCount, 
+		`데이터 처리 완료 (${filteredScores}곡, ${removedScores}개 제외)`)
 
 	// 완료 메시지 전송
 	updateProgressToLinker(fullProgressCount, fullProgressCount, '데이터 추출이 완료되었습니다!')
@@ -458,10 +482,16 @@ async function main() {
       }
       characterLevel = characterLevel ? Number(characterLevel) : null
 
+      let imgFilename = ''
+      if (characterImg) {
+        const match = characterImg.match(/\/([^\/?#]+\.png)(?:[?#]|$)/)
+        imgFilename = match ? match[1] : characterImg
+      }
+
       characterData.push({
         id: characterId,
         name: characterName,
-        img: characterImg,
+        img: imgFilename,
         rank: characterLevel,
         background
       })

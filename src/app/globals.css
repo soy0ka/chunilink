@@ -48,6 +48,7 @@
   --color-bronze: linear-gradient(to right, #cd7f32, #b08d57, #cd7f32);
   --color-silver: linear-gradient(90deg, #79F2FF 0%, #1EC7ED 30%, #93FFFF 60%, #1CF3FA 100%);
   --color-gold: linear-gradient(to right, #e6b800, #ffd700, #e6b800);
+  --color-platina: linear-gradient(to right, #e6b800, #ffd700, #e6b800);
 
   --color--rating-green: #24F117;
   --color--rating-orange: #FAB90A;

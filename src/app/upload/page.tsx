@@ -4,6 +4,7 @@
 import Bookmarklet from '@/components/shared/Bookmarklet'
 import Box from '@/components/UI/Box'
 import Button from '@/components/UI/Button'
+import { ChunithmData } from '@/types/chunithm'
 import { AlertCircle, Check, CheckCircle2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
@@ -79,12 +80,52 @@ function UploadPageContent() {
 		hasUploadParam ? 'playerInfo' : null
 	)
 
-	const processBookmarkletData = async (data: any) => {
+	// 데이터 업로드 함수
+	const uploadChunithmData = async (chunithmData: ChunithmData) => {
+		setLoading(true)
+		setError(null)
+
+		try {
+			const response = await fetch('/api/upload', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(chunithmData)
+			})
+
+			const data = await response.json()
+
+			if (!response.ok) {
+				throw new Error(data.error || '데이터 업로드에 실패했습니다')
+			}
+
+			setSuccess(true)
+
+			// 3초 후 프로필 페이지로 리다이렉트
+			setTimeout(() => {
+				router.push(`/profile/${data.slug}`)
+			}, 3000)
+
+			return data
+		} catch (error) {
+			console.error('Upload error:', error)
+			setError(error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다')
+			throw error
+		} finally {
+			setLoading(false)
+		}
+	}
+
+	const processBookmarkletData = async (data: ChunithmData) => {
 		try {
 			// 데이터 구조 유효성 검사
 			if (!data || !data.name) {
 				throw new Error('유효하지 않은 데이터 형식입니다.')
 			}
+
+			// 로컬 스토리지에 데이터 저장
+			localStorage.setItem('chunithm-data', JSON.stringify(data))
 
 			// 최종 처리 단계는 수동으로 처리
 			setStepStatus((prev) => ({
@@ -105,16 +146,8 @@ function UploadPageContent() {
 			setProgress(100)
 			setProgressMessage('데이터 처리가 완료되었습니다!')
 
-			// 성공적으로 처리됨
-			setSuccess(true)
-
-			// 로컬 스토리지에 데이터 저장
-			localStorage.setItem('chunithm-data', JSON.stringify(data))
-
-			// 3초 후 프로필 페이지로 리다이렉트
-			setTimeout(() => {
-				router.push('/profile')
-			}, 3000)
+			// 데이터 업로드
+			await uploadChunithmData(data)
 		} catch (err) {
 			setError(
 				`데이터 처리 중 오류가 발생했습니다: ${err instanceof Error ? err.message : '알 수 없는 오류'}`
@@ -185,12 +218,7 @@ function UploadPageContent() {
 
 		// 진행 상황 업데이트 핸들러
 		const processProgressData = (progressData: any) => {
-			console.log('Progress update:', progressData)
-
-			// progressData가 비어있거나 필요한 속성이 없는 경우 기본값 사용
-			if (!progressData) {
-				return
-			}
+			if (!progressData) return
 
 			// 객체에서 값을 추출하고 안전하게 기본값 설정
 			const current = progressData.current || 0
@@ -534,6 +562,38 @@ function UploadPageContent() {
 		}
 	}
 
+	// 파일 입력 처리
+	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+		const file = event.target.files?.[0]
+		if (!file) return
+
+		setError(null)
+		setLoading(true)
+		setProgress(10)
+
+		try {
+			const text = await file.text()
+			setFileContent(text)
+
+			// JSON 파싱
+			const jsonData = JSON.parse(text)
+
+			// 데이터 검증
+			if (!jsonData.name || !jsonData.rating || !jsonData.score) {
+				throw new Error('유효하지 않은 CHUNITHM 데이터 형식입니다.')
+			}
+
+			// 데이터 처리
+			await processBookmarkletData(jsonData)
+		} catch (err) {
+			console.error('파일 처리 오류:', err)
+			setError(
+				`파일을 처리하는 중 오류가 발생했습니다: ${err instanceof Error ? err.message : '알 수 없는 오류'}`
+			)
+			setLoading(false)
+		}
+	}
+
 	return (
 		<React.Fragment>
 			<div className="dark:bg-background/70 min-h-screen bg-white/30 py-10 backdrop-blur-2xl">
@@ -563,6 +623,24 @@ function UploadPageContent() {
 								<p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
 									잠시만 기다려주세요. CHUNITHM Net에서 데이터를 가져오고 있습니다.
 								</p>
+							</Box>
+						)}
+
+						{/* 파일 업로드 옵션 - 북마크렛이 활성화되지 않은 경우에만 표시 */}
+						{!hasUploadParam && (
+							<Box className="p-6">
+								<h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
+									파일에서 데이터 불러오기
+								</h3>
+								<p className="mb-3 text-sm text-gray-600 dark:text-gray-300">
+									북마크렛으로 저장한 JSON 파일을 업로드할 수 있습니다.
+								</p>
+								<input
+									type="file"
+									accept=".json"
+									onChange={handleFileChange}
+									className="w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-900 file:mr-4 file:rounded-md file:border-0 file:bg-indigo-500 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-indigo-600 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400"
+								/>
 							</Box>
 						)}
 
