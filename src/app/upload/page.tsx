@@ -607,8 +607,7 @@ function UploadPageContent() {
 							</Box>
 						)}
 
-						{/* 파일 업로드 옵션 - 북마크렛이 활성화되지 않은 경우에만 표시 */}
-						{!hasUploadParam && (
+						{/* {!hasUploadParam && (
 							<Box className="p-6">
 								<h3 className="mb-4 text-lg font-medium text-gray-900 dark:text-white">
 									파일에서 데이터 불러오기
@@ -623,7 +622,7 @@ function UploadPageContent() {
 									className="w-full cursor-pointer rounded-lg border border-gray-300 bg-gray-50 px-4 py-2 text-sm text-gray-900 file:mr-4 file:rounded-md file:border-0 file:bg-indigo-500 file:px-4 file:py-2 file:text-sm file:font-medium file:text-white hover:file:bg-indigo-600 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:placeholder-gray-400"
 								/>
 							</Box>
-						)}
+						)} */}
 
 						{/* 북마크렛 안내 - 대기 상태가 아닐 때만 표시 */}
 						{!hasUploadParam && <Bookmarklet />}
