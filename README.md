@@ -12,15 +12,15 @@
 <table>
   <tr>
     <td align="center">
-      <img src="./github/images/dark-profile.png" width="640"/><br/>
+      <img src=".github/images/dark-profile.png" width="640"/><br/>
     </td>
     <td align="center">
-      <img src="./github/images/dark-songs.png" width="640"/><br/>
+      <img src=".github/images/dark-songs.png" width="640"/><br/>
     </td>
   </tr>
   <tr>
     <td colspan="2" align="center">
-      <img src="./github/images/light-footer.png" width="640"/><br/>
+      <img src=".github/images/light-footer.png" width="640"/><br/>
     </td>
   </tr>
 </table>
