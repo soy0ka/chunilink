@@ -280,7 +280,7 @@ export async function POST(request: NextRequest) {
 				const difficulty = mapDifficultyToPrisma(scoreData.difficulty || '')
 				const key = `${song.id}-${difficulty}`
 
-				// 이미 처리한 키는 건너뛰기 (중복 스코어 방지)
+				// 이미 처리한 키는 te뛰기 (중복 스코어 방지)
 				if (updatedScoreKeys.has(key)) continue
 				updatedScoreKeys.add(key)
 
