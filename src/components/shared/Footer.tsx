@@ -1,4 +1,4 @@
-import { FaDiscord, FaGithub } from 'react-icons/fa'
+import { FaGithub } from 'react-icons/fa'
 
 export default function Footer() {
 	return (
@@ -57,16 +57,16 @@ export default function Footer() {
 						</div>
 
 						<div className="flex justify-center gap-4 md:justify-end">
-							<a
+							{/* <a
 								href="https://discord.gg/your-discord"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="dark:hover:text-chuni-violet-500 text-gray-500 transition-colors duration-200 hover:text-indigo-600 dark:text-gray-400"
 							>
 								<FaDiscord size={22} />
-							</a>
+							</a> */}
 							<a
-								href="https://github.com/your-username/chunithm"
+								href="https://github.com/soy0ka/chunilink"
 								target="_blank"
 								rel="noopener noreferrer"
 								className="text-gray-500 transition-colors duration-200 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white"
