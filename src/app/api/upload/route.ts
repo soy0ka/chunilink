@@ -2,7 +2,7 @@
 import { getServerAuthSession } from '@/library/auth'
 import { prisma } from '@/library/prismaSingleton'
 import { ChunithmData, PrismaEnumMap } from '@/types/chunithm'
-import { calculateRating } from '@/utils/rating'
+import { calculateRating } from '@/utils/ratingCalculation'
 import { HonorClass, RatingType } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/binary'
 import { randomUUID } from 'crypto'

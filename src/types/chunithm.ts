@@ -2,77 +2,44 @@
  * CHUNITHM 데이터 관련 타입 정의
  */
 
-/**
- * CHUNITHM 플레이어 전체 데이터 인터페이스
- */
-export interface ChunithmData {
-  appVersion: string;
-  honors: Honor[];
-  name: string;
-  rating: number;
-  level: number;
-  updatedAt: string;
-  lastPlayed: string;
-  friendCode: string;
-  totalPlayCount: string;
-  character: Character[];
-  favoriteCharacter: Character;
-  best: ScoreData[];
-  new: ScoreData[];
-  score: ScoreData[];
+export type PrismaEnumMap = Record<string, string>
+
+export type ChunithmCharacter = {
+	id: string
+	name: string
+	img: string
+	rank?: number
 }
 
-/**
- * CHUNITHM 칭호 데이터 인터페이스
- */
-export interface Honor {
-  type: string;
-  label: string;
+export type ChunithmHonor = {
+	type?: 'NORMAL' | 'SILVER' | 'GOLD' | 'PLATINA' | 'RAINBOW'
+	label: string
+	src?: string
 }
 
-/**
- * CHUNITHM 캐릭터 데이터 인터페이스
- */
-export interface Character {
-  id: string;
-  name: string;
-  img: string;
-  rank: number;
-  background: string;
-  isFavorite?: boolean;
+export type ChunithmScore = {
+	idx: number
+	title?: string
+	score: number
+	difficulty?: string
+	level?: number | string
+	playRank?: string
+	clearType?: string
+	comboType?: string
+	CtCType?: string
 }
 
-/**
- * CHUNITHM 점수 데이터 인터페이스
- */
-export interface ScoreData {
-  title?: string;
-  difficulty?: string;
-  score?: number;
-  playRank?: string;
-  clearType?: string;
-  comboType?: string;
-  CtCType?: string;
-  idx: number;
-}
-
-/**
- * 프리즈마 변환 유틸리티 타입
- */
-export interface PrismaEnumMap {
-  [key: string]: string;
-}
-
-/**
- * 북마크렛에 사용되는 데이터 구조
- */
-export interface BookmarkletData {
-  name?: string;
-  level?: number;
-  rating?: number;
-  friendCode?: string;
-  playCount?: number;
-  lastPlayed?: string;
-  characters?: Character[];
-  score?: ScoreData[];
+export type ChunithmData = {
+	name: string
+	level: number
+	rating: number
+	friendCode: string
+	totalPlayCount: string
+	lastPlayed: string
+	favoriteCharacter?: ChunithmCharacter
+	character?: ChunithmCharacter[]
+	honors?: ChunithmHonor[]
+	best?: ChunithmScore[]
+	new?: ChunithmScore[]
+	score: ChunithmScore[]
 }
