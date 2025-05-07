@@ -63,6 +63,7 @@ export default async function ProfilePage(props: { params: Promise<{ id: string 
 			<div className="mx-6">
 				<div className="mx-auto max-w-4xl">
 					<UserCard
+						slug={player.slug}
 						userName={player.name}
 						rank={player.level}
 						avatarUrl={avatarUrl}

@@ -3,10 +3,10 @@ import Avatar from '@UI/Avatar'
 import FriendCode from '@UI/FriendCode'
 import Honner from '@UI/Honner'
 import RatingBox from '@UI/Rating'
-import { Share2 } from 'lucide-react'
-import React from 'react'
+import ProfileLink from './ProfileLink'
 
 interface UserCardProps {
+	slug: string
 	userName: string
 	rank: number
 	avatarUrl: string
@@ -22,6 +22,7 @@ interface UserCardProps {
 }
 
 const UserCard: React.FC<UserCardProps> = ({
+	slug,
 	userName,
 	rank,
 	avatarUrl,
@@ -59,7 +60,6 @@ const UserCard: React.FC<UserCardProps> = ({
 	}
 
 	const { version, week } = getCurrentVersion(lastPlayDate)
-	// 버전 약칭 (예: CHUNITHM VERSE → VERSE)
 	const shortVersion = version.includes('CHUNITHM') ? version.split('CHUNITHM ')[1] : version
 
 	return (
@@ -73,11 +73,13 @@ const UserCard: React.FC<UserCardProps> = ({
 					))}
 				</div>
 				<Avatar rank={rank} avatarUrl={avatarUrl} />
-				<div className="flex items-center gap-3">
-					<h1 className="text-2xl font-bold tracking-widest text-gray-900 md:text-3xl dark:text-white">
-						{userName}
-					</h1>
-					<Share2 className="h-4 w-4 cursor-pointer text-gray-400 transition-colors hover:text-indigo-500" />
+				<div className="flex-col items-center gap-2">
+					<div className="flex items-center gap-3">
+						<h1 className="text-2xl font-extrabold tracking-widest text-gray-900 md:text-3xl dark:text-white">
+							{userName}
+						</h1>
+					</div>
+					<ProfileLink slug={slug} />
 				</div>
 				<div className="mt-2 flex flex-wrap gap-4 text-sm">
 					<div className="group relative flex items-center">

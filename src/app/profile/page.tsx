@@ -8,6 +8,7 @@ export default function ProfilePage() {
 			<div className="mx-6">
 				<div className="mx-auto max-w-4xl">
 					<UserCard
+						slug="chunilink"
 						userName="CHUNILINK"
 						rank={51}
 						avatarUrl="https://chunithm-net-eng.com/mobile/img/9cf73ca9d18732f5.png"
