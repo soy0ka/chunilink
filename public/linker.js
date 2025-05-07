@@ -6,20 +6,20 @@
  */
 
 const PlayRank = {
-  0: 'D',
-  1: 'C',
-  2: 'B',
-  3: 'BB',
-  4: 'BBB',
-  5: 'A',
-  6: 'AA',
-  7: 'AAA',
-  8: 'S',
-  9: 'S+',
-  10: 'SS',
-  11: 'SS+',
-  12: 'SSS',
-  13: 'SSS+',
+	0: 'D',
+	1: 'C',
+	2: 'B',
+	3: 'BB',
+	4: 'BBB',
+	5: 'A',
+	6: 'AA',
+	7: 'AAA',
+	8: 'S',
+	9: 'S+',
+	10: 'SS',
+	11: 'SS+',
+	12: 'SSS',
+	13: 'SSS+'
 }
 
 // 유틸리티 함수 모음
@@ -89,12 +89,13 @@ const utils = {
 	 */
 	extractHonorRankFromStyle(styleAttribute) {
 		if (!styleAttribute) return 'NORMAL'
-		if (styleAttribute.includes('honor_bg_gold')) return 'GOLD'
-		if (styleAttribute.includes('honor_bg_silver')) return 'SILVER'
+		if (styleAttribute.includes('honor_bg_normal')) return 'NORMAL'
 		if (styleAttribute.includes('honor_bg_bronze')) return 'BRONZE'
+		if (styleAttribute.includes('honor_bg_silver')) return 'SILVER'
+		if (styleAttribute.includes('honor_bg_gold')) return 'GOLD'
 		if (styleAttribute.includes('honor_bg_platina')) return 'PLATINA'
 		if (styleAttribute.includes('honor_bg_rainbow')) return 'RAINBOW'
-		return 'NORMAL'
+		return 'RAINBOW'
 	},
 
 	/**
@@ -125,77 +126,77 @@ const utils = {
 			score = Number(scoreElement.textContent.replaceAll(',', ''))
 		}
 
-    const idx = Number.parseInt(
+		const idx = Number.parseInt(
 			formElement.querySelector('input[type="hidden"][name="idx"]')?.getAttribute('value') || '0'
 		)
 
-    if (score !== 0) {
-      // 클리어 정보 파싱
-      let clearType = "FAIL"
-      let comboType = "NO_COMBO"
-      let CtCType = "NO_SYNC"
-      let playRank = "D"
-      const lampImgsDiv = formElement.querySelector('.play_musicdata_icon')
-      if (lampImgsDiv) {
-        const lampImgs = lampImgsDiv.querySelectorAll('img')
-        for (const img of lampImgs) {
-          const src = img.src
-          if (src.includes('icon_clear.png')) {
-            clearType = "CLEAR"
-          } else if (src.includes('icon_hard.png')) {
-            clearType = "HARD"
-          }else if (src.includes('icon_brave.png')) {
-            clearType = "BRAVE"
-          } else if (src.includes('icon_absolute.png')) {
-            clearType = "ABSOLUTE"
-          } else if (src.includes('icon_rank_catastrophy')) {
-            clearType = "CATASTROPHY"
-          }
+		if (score !== 0) {
+			// 클리어 정보 파싱
+			let clearType = 'FAIL'
+			let comboType = 'NO_COMBO'
+			let CtCType = 'NO_CHAIN'
+			let playRank = 'D'
+			const lampImgsDiv = formElement.querySelector('.play_musicdata_icon')
+			if (lampImgsDiv) {
+				const lampImgs = lampImgsDiv.querySelectorAll('img')
+				for (const img of lampImgs) {
+					const src = img.src
+					if (src.includes('icon_clear.png')) {
+						clearType = 'CLEAR'
+					} else if (src.includes('icon_hard.png')) {
+						clearType = 'HARD'
+					} else if (src.includes('icon_brave.png')) {
+						clearType = 'BRAVE'
+					} else if (src.includes('icon_absolute.png')) {
+						clearType = 'ABSOLUTE'
+					} else if (src.includes('icon_rank_catastrophy')) {
+						clearType = 'CATASTROPHY'
+					}
 
-          if (src.includes('icon_fullcombo.png')) {
-            comboType = "FULL_COMBO"
-          } else if (src.includes('icon_alljustice.png')) {
-            comboType = "ALL_JUSTICE"
-          } else if (src.includes('icon_alljusticecritical.png')) {
-            comboType = "ALL_JUSTICE_CRITICAL"
-          }
+					if (src.includes('icon_fullcombo.png')) {
+						comboType = 'FULL_COMBO'
+					} else if (src.includes('icon_alljustice.png')) {
+						comboType = 'ALL_JUSTICE'
+					} else if (src.includes('icon_alljusticecritical.png')) {
+						comboType = 'ALL_JUSTICE_CRITICAL'
+					}
 
-          if (src.includes('icon_fullchain.png')) {
-            CtCType = "FULL_CHAIN"
-          } else if (src.includes('icon_fullchain2.png')) {
-            CtCType = "FULL_CHAIN_2"
-          }
+					if (src.includes('icon_fullchain.png')) {
+						CtCType = 'FULL_CHAIN'
+					} else if (src.includes('icon_fullchain2.png')) {
+						CtCType = 'FULL_CHAIN_2'
+					}
 
-          // 랭크 이미지에서 점수 추출
-          const match = src.match(/icon_rank_([0-9]+)\.png/)
-          if (match) {
-            const rankValue = Number(match[1])
-            playRank = PlayRank[rankValue] || 'D'
-          }
-        }
-      }
-      return {
-        title,
-        difficulty,
-        score,
-        playRank,
-        clearType,
-        comboType,
-        CtCType,
-        idx
-      }
-    } else {
-      return {
-        title,
-        difficulty,
-        score,
-        playRank: null,
-        clearType: null,
-        comboType: null,
-        CtCType: null,
-        idx
-      }
-    }
+					// 랭크 이미지에서 점수 추출
+					const match = src.match(/icon_rank_([0-9]+)\.png/)
+					if (match) {
+						const rankValue = Number(match[1])
+						playRank = PlayRank[rankValue] || 'D'
+					}
+				}
+			}
+			return {
+				title,
+				difficulty,
+				score,
+				playRank,
+				clearType,
+				comboType,
+				CtCType,
+				idx
+			}
+		} else {
+			return {
+				title,
+				difficulty,
+				score,
+				playRank: null,
+				clearType: null,
+				comboType: null,
+				CtCType: null,
+				idx
+			}
+		}
 	}
 }
 
@@ -205,6 +206,7 @@ const utils = {
 async function main() {
 	// 설정 변수
 	const CHUNILINK_URL = 'https://chuni.yoru.icu'
+	// const CHUNILINK_URL = 'http://localhost:3000'
 	const VERSION = '1.0.0'
 	const difficulties = ['Basic', 'Advanced', 'Expert', 'Master', 'Ultima']
 	const isInternational = location.hostname === 'chunithm-net-eng.com'
@@ -216,8 +218,8 @@ async function main() {
 	const urls = {
 		home: `${baseUrl}home/`,
 		music: `${baseUrl}record/musicGenre/`,
-    basic: `${baseUrl}home/playerData/`,
-    character: `${baseUrl}/collection/characterList/`,
+		basic: `${baseUrl}home/playerData/`,
+		character: `${baseUrl}/collection/characterList/`,
 		ratingsBest: `${baseUrl}home/playerData/ratingDetailBest/`,
 		ratingsNew: `${baseUrl}home/playerData/ratingDetailRecent/`
 	}
@@ -239,7 +241,7 @@ async function main() {
 	// 진행 상태 표시 설정
 	const fullProgressCount = 10
 	let progressCount = 1
-	
+
 	// 츄니링커에 진행 상태 업데이트 메시지 전송
 	function updateProgressToLinker(current, total, message) {
 		if (uploadWindow && !uploadWindow.closed) {
@@ -262,38 +264,37 @@ async function main() {
 	updateProgressToLinker(progressCount, fullProgressCount, '플레이어 프로필을 가져오는 중...')
 	await utils.sleep(1000)
 	const playerData = await collectPlayerData(homeDoc)
-  updateProgressToLinker(progressCount, fullProgressCount, '플레이어 프로필 수집 완료')
+	updateProgressToLinker(progressCount, fullProgressCount, '플레이어 프로필 수집 완료')
 
-  // 1-2. 플레이어 데이터 수집
-  progressCount++
-  const PlayerDataDoc = await utils.fetchPageDoc(urls.basic)
-  updateProgressToLinker(progressCount, fullProgressCount, '플레이어 데이터를 가져오는 중...')
-  const additionalPlayerData = await collectAdditionalPlayerData(PlayerDataDoc)
-  playerData.friendCode = additionalPlayerData.friendCode
-  playerData.totalPlayCount = additionalPlayerData.totalPlayCount
-  updateProgressToLinker(progressCount, fullProgressCount, '플레이어 데이터 수집 완료')
+	// 1-2. 플레이어 데이터 수집
+	progressCount++
+	const PlayerDataDoc = await utils.fetchPageDoc(urls.basic)
+	updateProgressToLinker(progressCount, fullProgressCount, '플레이어 데이터를 가져오는 중...')
+	const additionalPlayerData = await collectAdditionalPlayerData(PlayerDataDoc)
+	playerData.friendCode = additionalPlayerData.friendCode
+	playerData.totalPlayCount = additionalPlayerData.totalPlayCount
+	updateProgressToLinker(progressCount, fullProgressCount, '플레이어 데이터 수집 완료')
 
-  // 1-3. 캐릭터 데이터 수집
-  progressCount++
-  const characterDataDoc = await utils.fetchPageDoc(urls.character)
-  updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터를 가져오는 중...')
-  const characterData = await collectCharacterData(characterDataDoc)
-  playerData.character = characterData
-  updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터 수집 완료')
+	// 1-3. 캐릭터 데이터 수집
+	progressCount++
+	const characterDataDoc = await utils.fetchPageDoc(urls.character)
+	updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터를 가져오는 중...')
+	const characterData = await collectCharacterData(characterDataDoc)
+	playerData.character = characterData
+	updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터 수집 완료')
 
-  const favoriteCharacter = homeDoc.querySelector('.player_chara')
-  const favoriteCharacterImgSrc = favoriteCharacter.querySelector('img')?.src
+	const favoriteCharacter = homeDoc.querySelector('.player_chara')
+	const favoriteCharacterImgSrc = favoriteCharacter.querySelector('img')?.src
 
-  // 	https://chunithm-net-eng.com/mobile/img/d39707c2e00671e7.png -> d39707c2e00671e7.png 만 추출해서 
-  // characterData 배열에서 img 속성과 비교하여 해당 캐릭터를 찾음
+	// 	https://chunithm-net-eng.com/mobile/img/d39707c2e00671e7.png -> d39707c2e00671e7.png 만 추출해서
+	// characterData 배열에서 img 속성과 비교하여 해당 캐릭터를 찾음
 
-  const favoriteCharacterData = characterData.find((character) => {
-    const characterImgSrc = character.img
-    return favoriteCharacterImgSrc.includes(characterImgSrc)
-  }
-  )
-  playerData.favoriteCharacter = favoriteCharacterData
-  updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터 수집 완료')
+	const favoriteCharacterData = characterData.find((character) => {
+		const characterImgSrc = character.img
+		return favoriteCharacterImgSrc.includes(characterImgSrc)
+	})
+	playerData.favoriteCharacter = favoriteCharacterData
+	updateProgressToLinker(progressCount, fullProgressCount, '캐릭터 데이터 수집 완료')
 
 	// 2. 악곡 데이터 수집 준비
 	progressCount++
@@ -301,7 +302,7 @@ async function main() {
 
 	const preDoc = await utils.fetchPageDoc(urls.music)
 	const token = preDoc.querySelector('input[name=token]').value
-	
+
 	// 악곡 데이터 수집
 	const musicData = await collectMusicData(
 		urls.music,
@@ -314,36 +315,49 @@ async function main() {
 
 	// 진행도 update (난이도 수만큼 증가)
 	progressCount += difficulties.length
-	
+
 	// 3. 베스트 악곡 데이터 수집
 	updateProgressToLinker(progressCount, fullProgressCount, '베스트 악곡을 가져오는 중...')
-	const bestMusicData = await collectRatingMusicData(urls.ratingsBest, musicData, updateProgressToLinker)
+	const bestMusicData = await collectRatingMusicData(
+		urls.ratingsBest,
+		musicData,
+		updateProgressToLinker
+	)
 	await utils.sleep(1000)
 
 	// 4. 신곡 악곡 데이터 수집
 	progressCount++
 	updateProgressToLinker(progressCount, fullProgressCount, '신곡 악곡을 가져오는 중...')
-	const newMusicData = await collectRatingMusicData(urls.ratingsNew, musicData, updateProgressToLinker)
+	const newMusicData = await collectRatingMusicData(
+		urls.ratingsNew,
+		musicData,
+		updateProgressToLinker
+	)
 	await utils.sleep(1000)
 
 	// 5. 데이터 결합 및 완료
 	progressCount++
 	updateProgressToLinker(progressCount, fullProgressCount, '데이터 처리 중...')
-	
+
 	// 데이터 조합
-	playerData.best = bestMusicData.filter(score => score.score > 0)
-	playerData.new = newMusicData.filter(score => score.score > 0)
-	playerData.score = musicData.filter(score => score.score > 0)
+	playerData.best = bestMusicData.filter((score) => score.score > 0)
+	playerData.new = newMusicData.filter((score) => score.score > 0)
+	playerData.score = musicData.filter((score) => score.score > 0)
 
 	// 필터링 결과 로깅
 	const totalScores = bestMusicData.length + newMusicData.length + musicData.length
 	const filteredScores = playerData.best.length + playerData.new.length + playerData.score.length
 	const removedScores = totalScores - filteredScores
-	console.log(`점수가 0인 ${removedScores}개의 곡 데이터가 제외되었습니다. 총 ${filteredScores}곡 전송`)
-	
+	console.log(
+		`점수가 0인 ${removedScores}개의 곡 데이터가 제외되었습니다. 총 ${filteredScores}곡 전송`
+	)
+
 	// 진행 상태 메시지 업데이트
-	updateProgressToLinker(progressCount, fullProgressCount, 
-		`데이터 처리 완료 (${filteredScores}곡, ${removedScores}개 제외)`)
+	updateProgressToLinker(
+		progressCount,
+		fullProgressCount,
+		`데이터 처리 완료 (${filteredScores}곡, ${removedScores}개 제외)`
+	)
 
 	// 완료 메시지 전송
 	updateProgressToLinker(fullProgressCount, fullProgressCount, '데이터 추출이 완료되었습니다!')
@@ -376,23 +390,26 @@ async function main() {
 		console.error('데이터 전송 중 오류:', err)
 	}
 
-  /**
-   * 부가적 플레이어 데이터를 수집합니다.
-   * 친구 코드와 총 플레이수를 수집합니다.
-   * @param {Document} PlayerDataDoc - 플레이어 데이터 문서
-   * @returns {Object} 부가적 플레이어 데이터
-   */
-  async function collectAdditionalPlayerData(PlayerDataDoc) {
-    // 친구 코드는 숨겨진 span에 있음
-    const friendCodeSpan = PlayerDataDoc.querySelector('.user_data_friend_tap span[style*="display:none"]')
-    const friendCode = friendCodeSpan ? friendCodeSpan.textContent.trim() : ''
-    const totalPlayCount = PlayerDataDoc.querySelector('.user_data_play_count')?.textContent?.trim() || ''
-    
-    return {
-      friendCode,
-      totalPlayCount
-    }
-  }
+	/**
+	 * 부가적 플레이어 데이터를 수집합니다.
+	 * 친구 코드와 총 플레이수를 수집합니다.
+	 * @param {Document} PlayerDataDoc - 플레이어 데이터 문서
+	 * @returns {Object} 부가적 플레이어 데이터
+	 */
+	async function collectAdditionalPlayerData(PlayerDataDoc) {
+		// 친구 코드는 숨겨진 span에 있음
+		const friendCodeSpan = PlayerDataDoc.querySelector(
+			'.user_data_friend_tap span[style*="display:none"]'
+		)
+		const friendCode = friendCodeSpan ? friendCodeSpan.textContent.trim() : ''
+		const totalPlayCount =
+			PlayerDataDoc.querySelector('.user_data_play_count')?.textContent?.trim() || ''
+
+		return {
+			friendCode,
+			totalPlayCount
+		}
+	}
 
 	/**
 	 * 플레이어 프로필 데이터를 수집합니다.
@@ -453,51 +470,52 @@ async function main() {
 		}
 	}
 
-  async function collectCharacterData(characterDoc) {
-    const characterData = []
+	async function collectCharacterData(characterDoc) {
+		const characterData = []
 
-    const characterList = characterDoc.querySelector('#list')
+		const characterList = characterDoc.querySelector('#list')
 
-    for (const character of characterList.children) {
-      if (!character.classList.contains('box01')) continue
+		for (const character of characterList.children) {
+			if (!character.classList.contains('box01')) continue
 
-      // 캐릭터 ID
-      const characterId = character.querySelector('input[name="chara"]')?.value || ''
+			// 캐릭터 ID
+			const characterId = character.querySelector('input[name="chara"]')?.value || ''
 
-      // 캐릭터 이름
-      const characterName = character.querySelector('.character_name_block a')?.textContent?.trim() || ''
+			// 캐릭터 이름
+			const characterName =
+				character.querySelector('.character_name_block a')?.textContent?.trim() || ''
 
-      // 캐릭터 이미지
-      const imgElem = character.querySelector('.list_chara_img img')
-      const characterImg = imgElem?.getAttribute('data-original') || imgElem?.src || ''
-      const bgImage = character.querySelector('.list_chara_img')?.getAttribute('style')
-      const background = bgImage ? bgImage.replace(/.*url\(([^)]+)\).*/, '$1') : ''
+			// 캐릭터 이미지
+			const imgElem = character.querySelector('.list_chara_img img')
+			const characterImg = imgElem?.getAttribute('data-original') || imgElem?.src || ''
+			const bgImage = character.querySelector('.list_chara_img')?.getAttribute('style')
+			const background = bgImage ? bgImage.replace(/.*url\(([^)]+)\).*/, '$1') : ''
 
-      // 캐릭터 레벨 (숫자 이미지 여러 개로 구성)
-      let characterLevel = ''
-      const levelImgs = character.querySelectorAll('.character_list_rank_num img')
-      for (const img of levelImgs) {
-        const match = img.src.match(/num_s_lv_([0-9]+)\.png/)
-        if (match) characterLevel += match[1]
-      }
-      characterLevel = characterLevel ? Number(characterLevel) : null
+			// 캐릭터 레벨 (숫자 이미지 여러 개로 구성)
+			let characterLevel = ''
+			const levelImgs = character.querySelectorAll('.character_list_rank_num img')
+			for (const img of levelImgs) {
+				const match = img.src.match(/num_s_lv_([0-9]+)\.png/)
+				if (match) characterLevel += match[1]
+			}
+			characterLevel = characterLevel ? Number(characterLevel) : null
 
-      let imgFilename = ''
-      if (characterImg) {
-        const match = characterImg.match(/\/([^\/?#]+\.png)(?:[?#]|$)/)
-        imgFilename = match ? match[1] : characterImg
-      }
+			let imgFilename = ''
+			if (characterImg) {
+				const match = characterImg.match(/\/([^\/?#]+\.png)(?:[?#]|$)/)
+				imgFilename = match ? match[1] : characterImg
+			}
 
-      characterData.push({
-        id: characterId,
-        name: characterName,
-        img: imgFilename,
-        rank: characterLevel,
-        background
-      })
-    }
-    return characterData
-  }
+			characterData.push({
+				id: characterId,
+				name: characterName,
+				img: imgFilename,
+				rank: characterLevel,
+				background
+			})
+		}
+		return characterData
+	}
 
 	/**
 	 * 악곡 데이터를 수집합니다.
@@ -521,7 +539,7 @@ async function main() {
 		let currentProgress = startProgress
 
 		// 전체 진행 과정 시작 알림
-		progressCallback(currentProgress, totalProgress, '악곡 데이터 수집 시작...');
+		progressCallback(currentProgress, totalProgress, '악곡 데이터 수집 시작...')
 
 		for (let i = 0; i < difficulties.length; i++) {
 			const difficulty = difficulties[i]
@@ -530,7 +548,7 @@ async function main() {
 			// 각 난이도별 진행 상황 알림
 			progressCallback(
 				currentProgress,
-				totalProgress, 
+				totalProgress,
 				`${difficulty.toUpperCase()} 데이터를 가져오는 중...`
 			)
 
@@ -539,15 +557,15 @@ async function main() {
 
 			// 곡 수 계산
 			const forms = musicDoc.querySelectorAll('form')
-			const songCount = forms.length;
-			let processedCount = 0;
+			const songCount = forms.length
+			let processedCount = 0
 
 			// 데이터 파싱 시작 알림
 			progressCallback(
-				currentProgress, 
+				currentProgress,
 				totalProgress,
 				`${difficulty.toUpperCase()} 곡 정보 분석 중... (0/${songCount})`
-			);
+			)
 
 			for (const form of forms) {
 				if (!form.querySelector('.music_title')) continue
@@ -556,15 +574,15 @@ async function main() {
 				if (musicInfo) {
 					musicData.push(musicInfo)
 				}
-				
+
 				// 20곡마다 진행 상황 업데이트
-				processedCount++;
+				processedCount++
 				if (processedCount % 20 === 0 || processedCount === songCount) {
 					progressCallback(
 						currentProgress,
 						totalProgress,
 						`${difficulty.toUpperCase()} 곡 정보 분석 중... (${processedCount}/${songCount})`
-					);
+					)
 				}
 			}
 
@@ -573,7 +591,7 @@ async function main() {
 				currentProgress,
 				totalProgress,
 				`${difficulty.toUpperCase()} 데이터 수집 완료 (${processedCount}곡)`
-			);
+			)
 
 			await utils.sleep(1000)
 		}
@@ -583,7 +601,7 @@ async function main() {
 			currentProgress,
 			totalProgress,
 			`모든 난이도 악곡 데이터 수집 완료 (총 ${musicData.length}곡)`
-		);
+		)
 
 		return musicData
 	}
@@ -599,10 +617,13 @@ async function main() {
 		const doc = await utils.fetchPageDoc(url)
 		const musicForms = doc.getElementsByTagName('form')
 		const ratingMusicData = []
-		
+
 		// 진행상황 업데이트 (데이터 가져오기 시작)
-		progressCallback(progressCount, fullProgressCount, 
-			url.includes('Best') ? '베스트 30 곡 정보 분석 중...' : '신곡 20곡 정보 분석 중...');
+		progressCallback(
+			progressCount,
+			fullProgressCount,
+			url.includes('Best') ? '베스트 30 곡 정보 분석 중...' : '신곡 20곡 정보 분석 중...'
+		)
 
 		for (const form of musicForms) {
 			const title = form.querySelector('.music_title')?.textContent?.trim()
@@ -617,10 +638,10 @@ async function main() {
 			const score = scoreElement ? Number(scoreElement.textContent.replaceAll(',', '')) : 0
 
 			// 기본값 설정
-			let playRank = "D"
-			let clearType = "FAIL"
-			let comboType = "NO_COMBO"
-			let CtCType = "NO_SYNC"
+			let playRank = 'D'
+			let clearType = 'FAIL'
+			let comboType = 'NO_COMBO'
+			let CtCType = 'NO_CHAIN'
 
 			// 기존 데이터에서 일치하는 곡 정보 찾기
 			const existingMusic = musicData.find(
@@ -628,10 +649,10 @@ async function main() {
 			)
 
 			if (existingMusic) {
-				playRank = existingMusic.playRank || "D"
-				clearType = existingMusic.clearType || "FAIL"
-				comboType = existingMusic.comboType || "NO_COMBO"
-				CtCType = existingMusic.CtCType || "NO_SYNC"
+				playRank = existingMusic.playRank || 'D'
+				clearType = existingMusic.clearType || 'FAIL'
+				comboType = existingMusic.comboType || 'NO_COMBO'
+				CtCType = existingMusic.CtCType || 'NO_CHAIN'
 			}
 
 			const idx = Number.parseInt(
@@ -651,10 +672,13 @@ async function main() {
 		}
 
 		// 전체 데이터 처리 완료 알림
-		progressCallback(progressCount, fullProgressCount, 
-			url.includes('Best') ? '베스트 30 곡 분석 완료' : '신곡 20곡 분석 완료');
+		progressCallback(
+			progressCount,
+			fullProgressCount,
+			url.includes('Best') ? '베스트 30 곡 분석 완료' : '신곡 20곡 분석 완료'
+		)
 
-		return ratingMusicData;
+		return ratingMusicData
 	}
 }
 
