@@ -16,7 +16,7 @@ export default async function Nabar() {
 						CHUNILINK
 					</div>
 				</NextLink>
-				<div className="items-center gap-6 md:flex">
+				<div className="flex items-center md:gap-6">
 					<NextLink
 						href="/upload"
 						className="text-gray-700 transition hover:text-indigo-600 dark:text-gray-200 dark:hover:text-indigo-400"
