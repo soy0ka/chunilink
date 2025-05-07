@@ -4,8 +4,9 @@
 import Bookmarklet from '@/components/shared/Bookmarklet'
 import Box from '@/components/UI/Box'
 import Button from '@/components/UI/Button'
+import StatusLabel from '@/components/Upload/StatusLabel'
 import { ChunithmData } from '@/types/chunithm'
-import { AlertCircle, Check, CheckCircle2 } from 'lucide-react'
+import { AlertCircle, CheckCircle2 } from 'lucide-react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
@@ -26,7 +27,6 @@ interface StepStatus {
 	}
 }
 
-// Inner component that uses search params
 function UploadPageContent() {
 	const { data: session, status } = useSession()
 	const router = useRouter()
@@ -35,14 +35,12 @@ function UploadPageContent() {
 	const isPostUpload = searchParams.get('post') === 'true'
 	const hasUploadParam = isBookmarklet || isPostUpload
 
-	// 로그인 상태 확인
 	useEffect(() => {
 		if (status === 'unauthenticated') {
 			router.push('/login')
 		}
 	}, [status, router])
 
-	// 로딩 중이거나 인증되지 않은 경우 로딩 UI 표시
 	if (status === 'loading' || status === 'unauthenticated') {
 		return (
 			<div className="flex min-h-screen items-center justify-center">
@@ -545,23 +543,6 @@ function UploadPageContent() {
 		processBookmarkletData
 	])
 
-	const getStatusIcon = (status: 'pending' | 'processing' | 'complete' | 'error') => {
-		switch (status) {
-			case 'pending':
-				return (
-					<div className="h-5 w-5 rounded-full border-2 border-gray-300 dark:border-gray-600"></div>
-				)
-			case 'processing':
-				return (
-					<div className="h-5 w-5 animate-spin rounded-full border-2 border-indigo-500 border-t-transparent"></div>
-				)
-			case 'complete':
-				return <Check className="h-5 w-5 text-green-500" />
-			case 'error':
-				return <AlertCircle className="h-5 w-5 text-red-500" />
-		}
-	}
-
 	// 파일 입력 처리
 	const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
 		const file = event.target.files?.[0]
@@ -666,37 +647,8 @@ function UploadPageContent() {
 									</div>
 								</div>
 								<div className="space-y-3">
-									{/* 주요 처리 단계 */}
-									<div className="flex items-center gap-3">
-										{getStatusIcon(stepStatus.playerInfo)}
-										<span
-											className={`text-sm ${
-												stepStatus.playerInfo === 'complete'
-													? 'text-green-600 dark:text-green-400'
-													: stepStatus.playerInfo === 'error'
-														? 'text-red-600 dark:text-red-400'
-														: 'text-gray-700 dark:text-gray-300'
-											}`}
-										>
-											플레이어 정보 처리
-										</span>
-									</div>
-
-									{/* 곡 정보 처리 - 주요 단계 */}
-									<div className="flex items-center gap-3">
-										{getStatusIcon(stepStatus.songData)}
-										<span
-											className={`text-sm ${
-												stepStatus.songData === 'complete'
-													? 'text-green-600 dark:text-green-400'
-													: stepStatus.songData === 'error'
-														? 'text-red-600 dark:text-red-400'
-														: 'text-gray-700 dark:text-gray-300'
-											}`}
-										>
-											곡 정보 처리
-										</span>
-									</div>
+									<StatusLabel status={stepStatus.playerInfo} label="플레이어 정보 처리" />
+									<StatusLabel status={stepStatus.songData} label="곡 정보 처리" />
 
 									{/* 곡 정보 처리 - 난이도별 하위 단계 */}
 									{(stepStatus.songData === 'processing' ||
@@ -705,107 +657,16 @@ function UploadPageContent() {
 										)) && (
 										<div className="ml-6 space-y-2">
 											{/* 이제 부모가 에러여도 자식들은 보여주고, 에러여도 보여줌 */}
-											<div className="flex items-center gap-3">
-												{getStatusIcon(stepStatus.difficulties.basic)}
-												<span
-													className={`text-xs ${
-														stepStatus.difficulties.basic === 'complete'
-															? 'text-green-600 dark:text-green-400'
-															: stepStatus.difficulties.basic === 'error'
-																? 'text-red-600 dark:text-red-400'
-																: 'text-gray-700 dark:text-gray-300'
-													}`}
-												>
-													BASIC
-												</span>
-											</div>
-											<div className="flex items-center gap-3">
-												{getStatusIcon(stepStatus.difficulties.advanced)}
-												<span
-													className={`text-xs ${
-														stepStatus.difficulties.advanced === 'complete'
-															? 'text-green-600 dark:text-green-400'
-															: stepStatus.difficulties.advanced === 'error'
-																? 'text-red-600 dark:text-red-400'
-																: 'text-gray-700 dark:text-gray-300'
-													}`}
-												>
-													ADVANCED
-												</span>
-											</div>
-											<div className="flex items-center gap-3">
-												{getStatusIcon(stepStatus.difficulties.expert)}
-												<span
-													className={`text-xs ${
-														stepStatus.difficulties.expert === 'complete'
-															? 'text-green-600 dark:text-green-400'
-															: stepStatus.difficulties.expert === 'error'
-																? 'text-red-600 dark:text-red-400'
-																: 'text-gray-700 dark:text-gray-300'
-													}`}
-												>
-													EXPERT
-												</span>
-											</div>
-											<div className="flex items-center gap-3">
-												{getStatusIcon(stepStatus.difficulties.master)}
-												<span
-													className={`text-xs ${
-														stepStatus.difficulties.master === 'complete'
-															? 'text-green-600 dark:text-green-400'
-															: stepStatus.difficulties.master === 'error'
-																? 'text-red-600 dark:text-red-400'
-																: 'text-gray-700 dark:text-gray-300'
-													}`}
-												>
-													MASTER
-												</span>
-											</div>
-											<div className="flex items-center gap-3">
-												{getStatusIcon(stepStatus.difficulties.ultima)}
-												<span
-													className={`text-xs ${
-														stepStatus.difficulties.ultima === 'complete'
-															? 'text-green-600 dark:text-green-400'
-															: stepStatus.difficulties.ultima === 'error'
-																? 'text-red-600 dark:text-red-400'
-																: 'text-gray-700 dark:text-gray-300'
-													}`}
-												>
-													ULTIMA
-												</span>
-											</div>
+											<StatusLabel status={stepStatus.difficulties.basic} label="BASIC" />
+											<StatusLabel status={stepStatus.difficulties.advanced} label="ADVANCED" />
+											<StatusLabel status={stepStatus.difficulties.expert} label="EXPERT" />
+											<StatusLabel status={stepStatus.difficulties.master} label="MASTER" />
+											<StatusLabel status={stepStatus.difficulties.ultima} label="ULTIMA" />
 										</div>
 									)}
 
-									<div className="flex items-center gap-3">
-										{getStatusIcon(stepStatus.playData)}
-										<span
-											className={`text-sm ${
-												stepStatus.playData === 'complete'
-													? 'text-green-600 dark:text-green-400'
-													: stepStatus.playData === 'error'
-														? 'text-red-600 dark:text-red-400'
-														: 'text-gray-700 dark:text-gray-300'
-											}`}
-										>
-											플레이 데이터 처리
-										</span>
-									</div>
-									<div className="flex items-center gap-3">
-										{getStatusIcon(stepStatus.ratingData)}
-										<span
-											className={`text-sm ${
-												stepStatus.ratingData === 'complete'
-													? 'text-green-600 dark:text-green-400'
-													: stepStatus.ratingData === 'error'
-														? 'text-red-600 dark:text-red-400'
-														: 'text-gray-700 dark:text-gray-300'
-											}`}
-										>
-											레이팅 데이터 처리
-										</span>
-									</div>
+									<StatusLabel status={stepStatus.playData} label="플레이 데이터 처리" />
+									<StatusLabel status={stepStatus.ratingData} label="레이팅 데이터 처리" />
 								</div>
 							</Box>
 						)}
@@ -856,7 +717,7 @@ export default function UploadPage() {
 	return (
 		<Suspense
 			fallback={
-				<div className="dark:bg-background/70 min-h-screen bg-white/30 py-10 backdrop-blur-2xl">
+				<div className="dark:bg-background/70 z-2 min-h-screen bg-white/30 py-10 backdrop-blur-2xl">
 					<div className="mx-auto max-w-xl px-6 text-center">
 						<h1 className="text-2xl font-bold text-gray-800 md:text-3xl dark:text-white">
 							CHUNILINKER
