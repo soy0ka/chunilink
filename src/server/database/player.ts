@@ -1,5 +1,5 @@
 import { prisma } from '@/library/prismaSingleton'
-import { RatingType } from '@prisma/client'
+import { Prisma, RatingType } from '@prisma/client'
 
 export async function getPlayerBySlug(slug: string) {
 	return prisma.player.findUnique({
@@ -34,5 +34,11 @@ export async function getPlayerMetadata(slug: string) {
 			name: true,
 			rating: true
 		}
+	})
+}
+
+export async function createNewPlayer(data: Prisma.PlayerCreateInput) {
+	return prisma.player.create({
+		data: data
 	})
 }
