@@ -18,7 +18,7 @@ export const authOptions: NextAuthOptions = {
 			authorization: {
 				params: {
 					scope: 'identify email',
-					redirect_uri: process.env.NEXT_PUBLIC_DISCORD_CALLBACK_URL
+					redirect_uri: process.env.DISCORD_CALLBACK_URL
 				}
 			}
 		})
@@ -86,13 +86,11 @@ export const authOptions: NextAuthOptions = {
 
 			return token
 		},
-		// 로그인 성공 후 리다이렉션 처리
+
 		async redirect({ url, baseUrl }) {
-			// URL이 상대 경로이거나 baseUrl로 시작하면 그대로 사용
 			if (url.startsWith('/') || url.startsWith(baseUrl)) {
 				return url
 			}
-			// 그 외의 경우 기본 URL로 리다이렉션
 			return baseUrl
 		}
 	}
