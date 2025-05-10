@@ -9,7 +9,7 @@ export default async function Nabar() {
 	const isLoggedIn = !!session?.user
 
 	return (
-		<header className="z-1 dark:bg-background/70 sticky top-0 w-full bg-white/40 p-4 shadow-md backdrop-blur-md dark:shadow-white/10">
+		<header className="z-1 dark:bg-background/70 fixed top-0 w-full bg-white/40 p-4 shadow-md backdrop-blur-md dark:shadow-white/10">
 			<nav className="mx-auto flex max-w-7xl items-center justify-between">
 				<NextLink href="/" className="flex items-center gap-2">
 					<div className="from-chuni-mint-700 to-chuni-violet-500 bg-gradient-to-r bg-clip-text text-2xl font-bold text-transparent">
