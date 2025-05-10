@@ -35,7 +35,7 @@ export default async function RootLayout({
 				className={`${geistSans.variable} ${geistMono.variable} dark:bg-background flex min-h-screen flex-col bg-white antialiased`}
 			>
 				<SessionProvider session={session}>
-					<Nabar />
+					<Nabar session={session} />
 					<VerseBackground>
 						<div className="z-1 mt-16 flex-grow overflow-auto">{children}</div>
 					</VerseBackground>
