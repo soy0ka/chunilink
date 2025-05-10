@@ -13,7 +13,7 @@ export const authOptions: NextAuthOptions = {
 			authorization: {
 				params: {
 					scope: 'identify email',
-					redirect_uri: process.env.DISCORD_CALLBACK_URL
+					redirect_uri: process.env.NEXT_PUBLIC_DISCORD_CALLBACK_URL
 				}
 			}
 		})
