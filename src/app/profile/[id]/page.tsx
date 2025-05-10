@@ -39,9 +39,10 @@ export default async function ProfilePage(props: { params: Promise<{ id: string 
 	const lastPlayDate = player.lastPlayed || player.lastUpdated || new Date()
 
 	const favoriteCharacter = player.PlayerCharacter.find((pc) => pc.isFavorite)
-	const avatarUrl =
-		`https://chunithm-net-eng.com/mobile/img/${favoriteCharacter?.character.imageUrl}` ||
-		'/default-avatar.png'
+	const avatarPath = favoriteCharacter?.character.imageUrl
+	const avatarUrl = avatarPath
+		? `https://chunithm-net-eng.com/mobile/img/${avatarPath}`
+		: '/default-avatar.png'
 
 	const allowedHonorTypes = ['GOLD', 'SILVER', 'PLATINA', 'RAINBOW', 'NORMAL'] as const
 	type AllowedHonorType = (typeof allowedHonorTypes)[number]
