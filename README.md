@@ -30,7 +30,7 @@
 
 ```bash
 # 저장소 클론
-git clone https://github.com/yourusername/chunilink.git
+git clone https://github.com/LanaKee/chunilink.git
 
 # 디렉토리 이동
 cd chunilink
